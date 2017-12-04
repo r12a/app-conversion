@@ -42,9 +42,8 @@ button {
 	border: 1px solid #dbce99; 
 	background-color: white; 
 	cursor: pointer; 
-	border-radius: 40px; 
-	-moz-border-radius: 4px; 
-	-webkit-border-radius: 4px;
+	border-radius: 4px;
+    padding: 1px 4px;
 	}
 code { 
 	font-size: 1em; 
@@ -66,3 +65,14 @@ code {
 	font-size: 80%;
 	line-height: 1.2;
 	}
+label {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    padding: 1px 2px;
+    }
+label:hover, button:hover {
+    background-color: antiquewhite;
+    }
+summary {
+    cursor:pointer;
+    }
