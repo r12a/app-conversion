@@ -79,7 +79,9 @@ textarea { padding: 0 5px; }
                 return false;" >UTF-16 units</button-->
 
 
-        <span class="options"><label>Treat numbers as <select id="numbers" style="border: 0; color: brown; font-size: 100%;">
+        <span class="options">
+<label>Treat bare numbers as 
+<select id="numbers" style="border: 0; color: brown; font-size: 100%;">
         <option value="none">Just numbers</option>
         <option value="hex">Hex code points</option>
         <option value="dec">Dec code point</option>
@@ -492,14 +494,15 @@ onclick="document.getElementById('decncrlatin1').checked = false; decNCRs.value 
 <li>The <code>\u{1234 5678 90}</code> style is now recognised and handled when converting to characters.</li>
 <li>Added a Perl/UTR#18 box to handle <code>\x{...}</code> type escapes.</li>
 <li>Changing checkboxes produces an immediate effect for all grey boxes now.</li>
-<li>Buttons for choosing how to parse numbers in green box input changed from buttons to a pull-down control.</li>
+<li>Buttons for choosing how to parse bare numbers in green box input changed from buttons to a pull-down control.</li>
 <li>Example text provided with instructions  tests for several more formats, and in a more useful way.</li>
 <li>Bugfix: <a href="https://github.com/r12a/app-conversion/issues/3">Issue #3 Missing space separator between first two characters in some strings</a></li>
-      </ul>
+</ul>
+<p>Once this version appears to be stable, it will replace the old version at <a href="https://r12a.github.io/app-conversion">https://r12a.github.io/app-conversion</a>, and this URL will become a redirect.</p>
 
 
 <div class="smallprint"><span id="version">This version <span id="version-info"> 
-  <!-- #BeginDate format:IS1m -->2018-07-20  10:39<!-- #EndDate --> 
+  <!-- #BeginDate format:IS1m -->2018-07-20  11:01<!-- #EndDate --> 
   </span> GMT. &nbsp;&bull;&nbsp; Copyright <a href="mailto:r12a@w3.org">r12a@w3.org</a>. Licence GPL (see source).</span></div>
 
 <script>
