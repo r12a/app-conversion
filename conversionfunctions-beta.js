@@ -183,9 +183,9 @@ function convertAllEscapes (str, numbers) {
 	str = convertUnicode2Char(str)
 	str = convert0x2Char(str)
 	str = convertuBracket2Char(str)
+	str = convertuBrSequence2Char(str)
 	str = convertxBracket2Char(str)
 	str = convertx002Char(str)
-    str = convertSlashChar2Char(str)
 	str = convertHexNCR2Char(str)
 	str = convertDecNCR2Char(str)
 	str = convertU0000002Char(str)
@@ -291,6 +291,20 @@ function convertCSS2Char ( str, convertbackslash ) {
 
 function convertuBracket2Char ( str ) { 
 	// converts a string containing \u{...} escapes to a string of characters
+	// str: string, the input
+	
+	// convert escapes to characters
+	str = str.replace(/\\u\{([A-Fa-f0-9]{1,})\}/g, 
+					function(matchstr, parens) {
+						return hex2char(parens)
+						}
+						)
+	return str
+	}
+
+
+function convertuBrSequence2Char ( str ) { 
+	// converts a string containing \u{... ... ...} escapes to a string of characters
 	// str: string, the input
 	
 	// convert escapes to characters
@@ -624,6 +638,9 @@ function convertjEsc2Char ( str, shortEscapes ) {
 	// convert \u and 4 digit escapes to characters
 	str = convertU00002Char(str)
     
+	// convert \x and 2 digit escapes to characters
+	str = convertx002Char(str)
+    
 	// convert \b etc to characters, if flag set
 	if (shortEscapes) {
 		str = convertSlashChar2Char(str)
@@ -638,6 +655,9 @@ function convertRust2Char ( str, shortEscapes ) {
 	
 	// convert \u{...} escapes to characters
 	str = convertuBracket2Char(str)
+    
+	// convert \u{... ... ...} escapes to characters
+	str = convertuBrSequence2Char(str)
     
 	// convert \x and 2 digit escapes to characters
 	str = convertx002Char(str)

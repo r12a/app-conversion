@@ -2,7 +2,7 @@
 // this page must be stored as UTF-8
 
 var example_test = `The decomposition mapping is <츠, U+11B8>, and not <0x110E, ᅳ, 11B8>.  1234 (ethiopic/latin?)
-<p>The title says ‫פעילות הבינאום, W3C‬ in Hebrew</p>
+<p>The title says ‫פעילות הבינאום, W3C‬ &rlm;in Hebrew</p>
 \\nabc\\x09áßç\\tक際👽  
 html/xml (hex)\\x09&#x00E7;&#x0916;&#x0940;&#x570B;&#x1F47D;&Aacute;
 html/xml (dec)\\x09&#231;&#2326;&#2368;&#22283;&#128125;&aacute;

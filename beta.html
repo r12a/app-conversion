@@ -40,26 +40,32 @@ textarea { padding: 0 5px; }
 </header>
 
 
-<div class="section">
-    <!--button style="color:teal; float: right;" onclick="escapedInput.value='The decomposition mapping is \u003C츠, U+11B8>, and not \u003C0x110E, &#x1173;, 11B8>.\n\u003Cp>The title says ‫פעילות הבינאום, W3C‬ in Hebrew\u003C/p>\nabcáßçकखी國際𐎄𐎔𐎘'; document.getElementById('example').style.display='block'; this.style.display='none';">Click for instructions.</button-->    
-    <button style="color:teal; float: right;" onclick="escapedInput.value=window.example_test; document.getElementById('example').style.display='block'; this.style.display='none';">Click for instructions.</button>    
-  <div style="display:none;" id="example">
- <p>Type or paste text in any of the green or grey shaded boxes and click on the button <code>Convert</code> button above it. Alternative representations will appear in all the other boxes. You can then cut &amp; paste the results into your document. <img src="selectall.png" alt="Select" /> selects all the text in a box. See the <a href="#notesection">notes</a> at the bottom of the page for other options.</p>
-    <p>The text in the <code>Mixed input</code> field below now contains a variety of escapes. Normally you would click on the <code>Convert</code> button just above the field to show the various escape formats below. Note, however, that this (unusually convoluted) text represents one character using just a hex code point number - therefore you should instead click on the button labelled <code>Hex code points</code> to convert that number as well as the other escapes in this particular example.</p>
-    <p>To continue with this example, click on <code>Hex code points</code> button.</p>
-    <p>You should now see the conversion results. You can use checkboxes with many fields to tweak the results. For more information see the notes in the lower part of the page.</p>
-  </div>
-</div>
-<p style="font-size: 120%;">This is version 9beta. Please <a style="font-weight:bold;" href="https://github.com/r12a/app-conversion/issues">raise any issues</a>.</p>
-<table id="converter">
+<section>
+<p style="font-size: 120%; float:left;">This is version 9beta. Please <a style="font-weight:bold;" href="https://github.com/r12a/app-conversion/issues">raise any issues here</a>.</p>
+
+
+<details>
+
+    <summary style="margin-right: 5%; margin-top: 1em;" dir="rtl"  onclick="escapedInput.value=window.example_test;">Show&nbsp;instructions</summary> 
+ <p style="clear: both;">Type or paste text in the green box and click on the <code>Convert</code> button above it. Alternative representations will appear in all the other boxes. You can also do the same in any grey box, if you want to target only certain types of escaped text. You can then cut &amp; paste the results into your document. <img src="selectall.png" alt="Select" /> selects all the text in a box (useful for deleting), and <img src="copy.png" alt="Copy"/> copies the text to the clipboard, if your browser supports that. See the <a href="#notesection">notes</a> at the bottom of the page for other options.</p>
+ <p>The text in the field with a green background currently contains a variety of escapes. Normally you would simply click on the <code>Convert</code> button just above the field to show the various escape formats below. Note, however, that this (unusually convoluted) text represents two characters using just a code point number – therefore you should select <code>Treat numbers as Hex code points</code> (or decimal) to convert those numbers as well as the other escapes in this particular example. You should also click the checkbox next to <code>Convert \n etc</code> to convert the <code>\n</code> and <code>\t</code> escapes.</p>
+    <p>After selecting those options, click on the <code>Convert</code> button.</p>
+    <p>You will then see the conversion results in the grey boxes. You can use checkboxes with many fields to tweak the results. For more information see the notes in the lower part of the page.</p>
+    </details>
+</section>
+    
+    
+<table id="converter" style="clear: both;">
   <tr>
     <td colspan="2">
       <button value="Convert" 
-				onclick="displayResults(convertAllEscapes(escapedInput.value, 'none'), escapedInput.id);
+				onclick="displayResults(convertAllEscapes(escapedInput.value, document.getElementById('numbers').value), escapedInput.id);
                 return false;" style="font-size:140%;" >Convert</button>
+                
       <span style="padding-top: 20px;"><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('escapedInput').focus();document.getElementById('escapedInput').select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('escapedInput').focus();document.getElementById('escapedInput').select();" />
-       <span class="options"> Convert numbers as</span>
-<button value="Convert" 
+       <!--span class="options"> Convert bare numbers as</span>
+    
+    <button value="Convert" 
 				onclick="displayResults(convertAllEscapes(escapedInput.value, 'hex'), escapedInput.id);
                 return false;" >Hex code points</button>
       <button value="Convert" 
@@ -70,14 +76,28 @@ textarea { padding: 0 5px; }
                 return false;" >UTF-8 units</button>
       <button value="Convert" 
 				onclick="displayResults(convertAllEscapes(escapedInput.value, 'utf16'), escapedInput.id);
-                return false;" >UTF-16 units</button>
+                return false;" >UTF-16 units</button-->
 
 
-<span class="options"><label>Convert \n etc<input type="checkbox" id="singleletterescapes" /></label>
-      </span><br/>
-      <textarea id="escapedInput" name="escapedInput" rows="3" cols="5" style="background-color: #DFD; color:#333"></textarea></td>
+        <span class="options"><label>Treat numbers as <select id="numbers" style="border: 0; color: brown; font-size: 100%;">
+        <option value="none">Just numbers</option>
+        <option value="hex">Hex code points</option>
+        <option value="dec">Dec code point</option>
+        <option value="utf8">UTF-8 units</option>
+        <option value="utf16">UTF-16 units</option>
+        </select>
+        </label>
+
+        &nbsp;&nbsp;&nbsp;
+
+        <label>Convert \n etc<input type="checkbox" id="singleletterescapes" /></label>
+    </span><br/>
+  <textarea id="escapedInput" name="escapedInput" rows="3" cols="5" style="background-color: #DFD; color:#333; height:7em;"></textarea></td>
   </tr>
-  <tr>
+  
+  
+  
+<tr>
     <td colspan="2" style="padding-top: 20px;"><!--  *********** CHARACTERS *********** --> 
        &#xA0;<span style="color:brown;">Characters</span> <button value="Convert" onclick="displayResults( chars.value, chars.id ); return false;" >Convert</button><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('chars').focus();document.getElementById('chars').select();document.execCommand('copy')" /><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('chars').focus();document.getElementById('chars').select();document.execCommand('copy')" />
       
@@ -103,9 +123,10 @@ textarea { padding: 0 5px; }
 				onclick="displayResults(convertXML2Char(XML.value), XML.id);
                 return false;" >Convert</button><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('XML').focus();document.getElementById('XML').select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('XML').focus();document.getElementById('XML').select();" />
 
-                <span class="options" id="xmlOptions"><label>Escape invisible characters<input class="check" type="checkbox" id="xmlinvisibles" data-fn="convertinvisibles" checked="checked" onclick="XML.value = convertCharStr2XML(convertXML2Char(XML.value), getParameters(parentNode));" /></label>
+                <span class="options" id="xmlOptions">
+                <label>Escape invisible characters<input class="check" type="checkbox" id="xmlinvisibles" data-fn="convertinvisibles" checked="checked" onclick="XML.value = convertCharStr2XML(convertXML2Char(XML.value), getParameters(parentNode.parentNode));" /></label>
               
-                <label>Convert bidi controls to HTML markup<input type="checkbox" id="xmlbidimarkup" data-fn="bidimarkup" onclick="XML.value = convertCharStr2XML(convertXML2Char(XML.value), getParameters(parentNode));"/></label>
+                <label>Convert bidi controls to HTML markup<input type="checkbox" id="xmlbidimarkup" data-fn="bidimarkup" onclick="XML.value = convertCharStr2XML(convertXML2Char(XML.value), getParameters(parentNode.parentNode));"/></label>
               </span><br/>
               <textarea id="XML" name="XML" rows="2" cols="5"></textarea>
               </td>
@@ -143,16 +164,17 @@ onclick="document.getElementById('decncrlatin1').checked = false; decNCRs.value 
   
   <tr>
     <td><!--  *********** JAVASCRIPT ESCAPES *********** --> 
-      &#xA0;<span style="color:brown;">JavaScript</span>
+      &#xA0;<span style="color:brown;">JavaScript/Java/C</span>
       <button value="Convert" 
 				onclick="displayResults(convertjEsc2Char(jEsc.value, true), jEsc.id); 
                 return false;" >Convert</button><span style="padding-top: 20px;"><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('jEsc').focus();document.getElementById('jEsc').select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('jEsc').focus();document.getElementById('jEsc').select();" />
 
 <span class="options" id="jEscOptions">
-      <label>ES6<input class="check" type="checkbox" data-fn="es6styleSC" id="es6styleSC" onclick="document.getElementById('cstyleSC').checked =false; jEsc.value = convertCharStr2jEsc(convertjEsc2Char(jEsc.value, true), getParameters(parentNode));"/></label>
+      <label>ES6<input class="check" type="checkbox" checked data-fn="es6styleSC" id="es6styleSC" onclick="document.getElementById('cstyleSC').checked =false; jEsc.value = convertCharStr2jEsc(convertjEsc2Char(jEsc.value, true), getParameters(parentNode));"/></label>
+      
       <label>C-style<input class="check" type="checkbox" data-fn="cstyleSC" id="cstyleSC" onclick="document.getElementById('es6styleSC').checked =false; jEsc.value = convertCharStr2jEsc(convertjEsc2Char(jEsc.value, true), getParameters(parentNode));" /></label>
       <label>\n etc<input class="check" type="checkbox" data-fn="noCR" id="noCR"  onclick="jEsc.value = convertCharStr2jEsc(convertjEsc2Char(jEsc.value, true), getParameters(parentNode));"/></label>
-      </span>
+    </span>
       <!--button value="Switch" 
 				onclick="jEsc.value = convert2C( jEsc.value ); 
                 return false;" >C-style Supp. Chars.</button--> 
@@ -271,15 +293,14 @@ onclick="document.getElementById('decncrlatin1').checked = false; decNCRs.value 
       &#xA0;<span style="color:brown;">UTF-16 code units</span> <button value="Convert" 
  				onclick="displayResults(convertUTF162Char(UTF16.value), UTF16.id); 
                 return false;" >Convert</button><span style="padding-top: 20px;"><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('UTF16').focus();document.getElementById('UTF16').select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('UTF16').focus();document.getElementById('UTF16').select();" />
-      
       <br/>
-      <textarea id="UTF16" name="UTF16" rows="3" cols="5"></textarea></td>
+  <textarea id="UTF16" name="UTF16" rows="3" cols="5"></textarea></td>
   </tr>
 
 
   <tr>
     <td><!--  *********** CODE POINTS *********** --> 
-      &#xA0;<span style="color:brown;">Hexadecimal </span> <button value="Convert" 
+      &#xA0;<span style="color:brown;">Hexadecimal/UTF-32 </span> <button value="Convert" 
 				onclick="displayResults( convertNumbers2Char(codePoints.value, 'hex'), codePoints.id ); 
                 return false;" >Convert</button><span style="padding-top: 20px;"><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('codePoints').focus();document.getElementById('codePoints').select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('codePoints').focus();document.getElementById('codePoints').select();" />
 
@@ -338,54 +359,61 @@ onclick="document.getElementById('decncrlatin1').checked = false; decNCRs.value 
   <h2>Box inputs and outputs</h2>
     <p>The following describe how the various boxes work, including what happens if you paste or type text into the named field and hit <code>Convert</code>, and  the output in the named field if you hit <code>Convert</code> elsewhere.</p>
     <h3>Characters</h3>
-      <p><strong>If you start a conversion from here:</strong>  Everything is treated as characters, eg.<samp> U+1234</samp> is not treated as an escape for the purposes of conversion.</p>
       <p><strong> When conversion puts something here:&nbsp; </strong>Everything is displayed as characters.</p>
       <p>&nbsp;You can view more detail for each character by clicking on <code>View in UniView</code>.</p>
+<p><strong>If you start a conversion from here:</strong>  Everything is treated as characters, eg.<samp> U+1234</samp> is not treated as an escape for the purposes of conversion.</p>
       
       
     <h3>HTML/XML</h3>
-      <p><strong>If you start a conversion from here:</strong> Use HTML or XML markup. Numeric character references or HTML character entities other than <code class="kw" translate="no">&amp;lt;</code> <code class="kw" translate="no">&amp;gt;</code> <code class="kw" translate="no">&amp;quot;</code> and <code class="kw" translate="no">&amp;amp;</code> are converted to ordinary characters during conversion.</p>
       <p><strong> When conversion puts something here:&nbsp; </strong> Ordinary characters will appear by default, except that <code class="kw" translate="no">&lt;</code> <code class="kw" translate="no">&gt;</code> <code class="kw" translate="no">&quot;</code> and <code class="kw" translate="no">&amp; </code> are converted to character entities. This is useful for preparing examples of sample code for HTML or XML.</p>
       <p> By default the control <code>Escape invisible characters</code> is checked. This causes certain invisible characters (such as <span class="uname">RLM</span>) or ambiguous characters (such as <span class="uname">NO-BREAK SPACE</span>) to be converted to escaped form. The characters affected will be added to over time.</p>
       <p>If <code>Convert bidi controls to HTML markup</code> is selected <span class="uname">RLE</span>, <span class="uname">LRE</span>, <span class="uname">RLI</span>, <span class="uname">LRI</span>, <span class="uname">FSI</span>, <span class="uname">PDF</span> and <span class="uname">PDI</span> are converted to HTML markup based on a <code>span</code> element.</p>
       <p class="warning">Hint: if you want to get the result into source code form, once the initial conversion has been done just click <code>Convert</code> above this text area, and then look in the <code>Characters</code> text area</p>
       <p class="warning">Note that if your text contains RLO or LRO plus PDF, the PDF will incorrectly be converted to <code>&lt;/span&gt;</code> at the moment.  I may fix this (and thereby allow RLO/LRO conversion too) at a later date.</p>
+      <p><strong>If you start a conversion from here:</strong> Use HTML or XML markup. Numeric character references or HTML character entities other than <code class="kw" translate="no">&amp;lt;</code> <code class="kw" translate="no">&amp;gt;</code> <code class="kw" translate="no">&amp;quot;</code> and <code class="kw" translate="no">&amp;amp;</code> are converted to ordinary characters during conversion.</p>
       
       
     <h3>Hexadecimal NCRs</h3>
-      <p><strong>If you start a conversion from here:</strong> It can be a mix of text and  escapes. Only hexadecimal NCRs are converted.</p>
       <p><strong> When conversion puts something here:</strong> By default, everything except ASCII characters is converted. </p>
       <p>You can use the checkboxes to specify whether ANSI (Latin1) characters remain unchanged, or whether all characters are converted.</p>
+<p><strong>If you start a conversion from here:</strong> It can be a mix of text and  escapes. Only hexadecimal NCRs are converted.</p>
       
       
       
     <h3>Decimal NCRs</h3>
-      <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and escapes. Only decimal NCRs are converted.</p>
       <p><strong> When conversion puts something here:</strong>&nbsp; By default, everything except ASCII characters is converted. </p>
       <p>You can use the checkboxes to specify whether ANSI (Latin1) characters remain unchanged, or whether all characters are converted.</p>
+      <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and escapes. Only decimal NCRs are converted.</p>
       
        
       
-    <h3>JavaScript escapes</h3>
-      <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and escapes. Only JavaScript escapes are converted. Accepts escapes as used in JavaScript (old style and ES6), Java and C.</p>
+    <h3>JavaScript/Java/C escapes</h3>
       <p><strong> When conversion puts something here:</strong>&nbsp; By default, everything except visible ASCII characters is converted to numeric escapes, and the following escapes are substituted for ASCII characters: \0, \b, \t, \v, \f, \\.</p>
-      <p>The default output to this field is specifically JavaScript compliant, though this is valid Java code too (a small number of Java-only named escapes such as <code class="kw" translate="no">\e</code> are rendered as numeric escapes). </p>
+      <p>The default output to this field is in the ES6 style, which is much more useful when dealing with supplementary characters (such as emoji), and is well supported by major browsers, except for Internet Explorer. To generate the old style escapes, or escapes for Java, deselect the <code>ES6-style</code> checkbox. A small number of Java-only named escapes such as <code class="kw" translate="no">\e</code> are rendered as numeric escapes.</p>
       <p>If <code>C-style</code> is checked, supplementary characters are rendered by a single number, eight digits long, rather than two adjacent surrogate code point numbers.</p>
-      <p>If <code>ES6-style</code> is checked, supplementary characters are also rendered as a single number but using the new format described by EcmaScript 6.</p>
-      <p>If <code>\n etc</code> is checked, line feeds, tabs, and quotation marks are also escaped.</p>
-      
-       
-      
-    <h3>Rust escapes</h3>
+      <p>If <code>\n etc</code> is checked, line feeds (\n), tabs (\t), and quotation marks (\") are also escaped.</p>
       <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and escapes. Only the following types of escape are recognised:</p>
       <ul>
+      <li>\u{1F468}</li>
+      <li>\u1234 (requires 2 escapes for supplementary characters)</li>
+      <li>\U00123456</li>
+      <li>\x10</li>
+      <li>\0 \b \t \n \r \v \f \\ \"</li>
+      </ul></p>
+      
+       
+      
+    <h3>Rust/Ruby escapes</h3>
+      <p><strong> When conversion puts something here:</strong>&nbsp; By default, everything except visible ASCII characters is converted to \u{...} escapes, and the following escapes are substituted for ASCII characters: \0, \b, \t, \v, \f, \\. Output for other characters in the ranges U+0001-U+001F and U+0080-U+009F (ie. invisible control characters) uses the \x.. escape format.</p>
+      <p>If <code>\n etc</code> is checked, line feeds (\n), tabs (\t), and quotation marks (\") are also escaped.</p>
+
+    <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and escapes. Only the following types of escape are recognised:</p>
+<ul>
       <li>\u{1F468}</li>
       <li>\u{1234 1235 1236}</li>
       <li>\x10</li>
       <li>\0 \b \t \n \r \v \f \\ \"</li>
       </ul>
-      <p><strong> When conversion puts something here:</strong>&nbsp; By default, everything except visible ASCII characters is converted to \u{...} escapes, and the following escapes are substituted for ASCII characters: \0, \b, \t, \v, \f, \\. Output for other characters in the ranges U+0001-U+001F and U+0080-U+009F (ie. invisible control characters) uses the \x.. escape format.      </p>
-      <p>If <code>\n etc</code> is checked, line feeds, tabs, and quotation marks are also escaped.</p>
       
        
       
@@ -453,11 +481,25 @@ onclick="document.getElementById('decncrlatin1').checked = false; decNCRs.value 
       <p><strong> When conversion puts something here:</strong>&nbsp; You'll see hexadecimal numbers of 1 to 4 digits representing the UTF-16 code units for the text converted. Supplementary characters are represented by two code units.</p>
 </section>
 </details>
-</div>
+
+
+
+
+<h2>Notable changes</h2>
+      <ul>
+      <li>ES6 style is now the default format when converting to JavaScript. Deselect <code>ES6</code> checkbox to get Java-style escapes.</li>
+<li>When converting to <code>U-hex</code> and <code>0x...</code> the escapes are no longer surrounded by spaces (and therefore the conversion is reversible). If you want to separate adjacent escapes by a space, click on the <code>Separate</code> button (which will make the conversion no longer reversible).</li>
+<li>The <code>\u{1234 5678 90}</code> style is now recognised and handled when converting to characters.</li>
+<li>Added a Perl/UTR#18 box to handle <code>\x{...}</code> type escapes.</li>
+<li>Changing checkboxes produces an immediate effect for all grey boxes now.</li>
+<li>Buttons for choosing how to parse numbers in green box input changed from buttons to a pull-down control.</li>
+<li>Example text provided with instructions  tests for several more formats, and in a more useful way.</li>
+<li>Bugfix: <a href="https://github.com/r12a/app-conversion/issues/3">Issue #3 Missing space separator between first two characters in some strings</a></li>
+      </ul>
 
 
 <div class="smallprint"><span id="version">This version <span id="version-info"> 
-  <!-- #BeginDate format:IS1m -->2018-07-19  10:27<!-- #EndDate --> 
+  <!-- #BeginDate format:IS1m -->2018-07-20  10:39<!-- #EndDate --> 
   </span> GMT. &nbsp;&bull;&nbsp; Copyright <a href="mailto:r12a@w3.org">r12a@w3.org</a>. Licence GPL (see source).</span></div>
 
 <script>
