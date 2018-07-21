@@ -52,27 +52,27 @@ function displayResults(str, src) {
 		preserve = 'none';
 		if (document.getElementById('unicodelatin1').checked) { preserve = 'latin1' }
 		else if (document.getElementById('unicodeascii').checked) { preserve = 'ascii' } 
-		Unicode.value = convertCharStr2CP(str, preserve, true, 'unicode');
+		Unicode.value = convertCharStr2CP(str, preserve, 4, 'unicode');
 		}
 	if (src !== 'zeroX') { 
 		preserve = 'none'
 		if (document.getElementById('zeroXlatin1').checked) { preserve = 'latin1'; }
 		else if (document.getElementById('zeroXascii').checked) { preserve = 'ascii'; } 
-		zeroX.value = convertCharStr2CP(str, preserve, false, 'zerox');
+		zeroX.value = convertCharStr2CP(str, preserve, 0, 'zerox');
 		}
 
 
-if (src !== 'codePoints') { 
+    if (src !== 'codePoints') { 
 		preserve = 'none'
 		if (document.getElementById('hexcplatin1').checked) { preserve = 'latin1' }
 		else if (document.getElementById('hexcpascii').checked) { preserve = 'ascii' } 
-		codePoints.value = convertCharStr2CP(str, preserve, true, 'hex')
+		codePoints.value = convertCharStr2CP(str, preserve, document.getElementById('hexcppad').value, 'hex', document.getElementById('hexcpascii').checked)
 		}
 	if (src != 'decCodePoints') { 
 		preserve = 'none';
 		if (document.getElementById('deccplatin1').checked) { preserve = 'latin1'; }
 		else if (document.getElementById('deccpascii').checked) { preserve = 'ascii'; } 
-		decCodePoints.value = convertCharStr2CP(str, preserve, true, 'dec'); 
+		decCodePoints.value = convertCharStr2CP(str, preserve, 0, 'dec', document.getElementById('deccpascii').checked)
 		}
 	if (src != 'UTF8') { 
 		UTF8.value = convertCharStr2UTF8( str );
@@ -193,7 +193,7 @@ function convertAllEscapes (str, numbers) {
 	str = convertCSS2Char(str, false)
 	str = convertpEnc2Char(str)
 	str = convertEntities2Char(str)
-	str = convertNumbers2Char(str, numbers)
+	str = convertGreenNumbers2Char(str, numbers)
 	
     if (sle) str = convertSlashChar2Char(str)
 	return str
@@ -419,8 +419,8 @@ function convertEntities2Char ( str ) {
 	}
 
 
-function convertNumbers2Char ( str, type ) { 
-	// converts a string containing number sequences to a string of characters
+function convertGreenNumbers2Char ( str, type ) { 
+	// converts a string containing number sequences IN THE GREEN BOX to a string of characters
 	// str: string, the input
 	// type: string enum [none, hex, dec, utf8, utf16], what to treat numbers as
 	
@@ -456,6 +456,90 @@ function convertNumbers2Char ( str, type ) {
 	return str
 	}
 
+
+
+function convertNumbers2Char ( str, type ) { 
+	// converts a string containing number sequences to a string of characters
+	// str: string, the input
+	// type: string enum [none, hex, dec, utf8, utf16], what to treat numbers as
+	
+	if (type === 'hex') {
+		str = str.replace(/([A-Fa-f0-9]{2,8}\b)/g, 
+					function(matchstr, parens) {
+                    console.log(parens)
+						return hex2char(parens)
+						}
+						)
+		}
+	else if (type === 'dec') {
+		str = str.replace(/([0-9]+\b)/g, 
+					function(matchstr, parens) {
+						return dec2char(parens)
+						}
+						)
+		}
+	else if (type === 'utf8') {
+		str = str.replace(/(( [A-Fa-f0-9]{2})+)/g, 
+		//str = str.replace(/((\b[A-Fa-f0-9]{2}\b)+)/g, 
+					function(matchstr, parens) {
+						return convertUTF82Char(parens) 
+						}
+						)
+		}
+	else if (type === 'utf16') {
+		str = str.replace(/(( [A-Fa-f0-9]{1,6})+)/g, 
+					function(matchstr, parens) {
+						return convertUTF162Char(parens)
+						}
+						)
+		}
+        console.log(str)
+	return str
+	}
+
+
+
+function convertSpaceSeparatedNumbers2Char ( str, type ) { 
+	// converts a string containing number sequences to a string of characters
+	// str: string, the input
+	// type: string enum [none, hex, dec, utf8, utf16], what to treat numbers as
+	
+    // use a replacement for spaces, so they can be removed before the end
+    str = str.replace(/ /g, '§±§')
+    
+	if (type === 'hex') {
+		str = str.replace(/([A-Fa-f0-9]{2,8}\b)/g, 
+					function(matchstr, parens) {
+                    console.log(parens)
+						return hex2char(parens)
+						}
+						)
+		}
+	else if (type === 'dec') {
+		str = str.replace(/([0-9]+\b)/g, 
+					function(matchstr, parens) {
+						return dec2char(parens)
+						}
+						)
+		}
+	else if (type === 'utf8') {
+		str = str.replace(/(( [A-Fa-f0-9]{2})+)/g, 
+		//str = str.replace(/((\b[A-Fa-f0-9]{2}\b)+)/g, 
+					function(matchstr, parens) {
+						return convertUTF82Char(parens) 
+						}
+						)
+		}
+	else if (type === 'utf16') {
+		str = str.replace(/(([A-Fa-f0-9]{1,6})+)/g, 
+					function(matchstr, parens) {
+						return convertUTF162Char(parens)
+						}
+						)
+		}
+        console.log(str)
+	return str.replace(/§±§/g,'')
+	}
 
 
 
@@ -713,7 +797,6 @@ function convertCharStr2XML ( str, parameters ) {
 	str = str.replace(/"/g, '&quot;')
 	str = str.replace(/</g, '&lt;')
 	str = str.replace(/>/g, '&gt;')
-    console.log(parameters)
 	
 	// replace invisible and ambiguous characters
 	if (parameters.match(/convertinvisibles/)) {
@@ -1203,16 +1286,16 @@ function convertCharStr2CSS ( str ) {
 
 
 
-function convertCharStr2CP ( textString, parameters, pad, type ) { 
+function convertCharStr2CP ( textString, parameters, pad, type, mixed ) { console.log(mixed)
 	// converts a string of characters to code points, separated by space
 	// textString: string, the string to convert
 	// parameters: string enum [ascii, latin1], a set of characters to not convert
 	// pad: boolean, if true, hex numbers lower than 1000 are padded with zeros
 	// type: string enum[hex, dec, unicode, 0x], whether output should be in hex or dec or unicode U+ form
+    // mixed: boolean, true if Show Latin is selected: causes space separators to be added
 	var str = ''
     var number
     var chars = [...textString]
-    console.log(type)
 	for (let i=0; i<chars.length; i++) {
         var cp = chars[i].codePointAt(0)
         
@@ -1221,20 +1304,21 @@ function convertCharStr2CP ( textString, parameters, pad, type ) {
         else {
             switch (type) {
                 case 'hex': number = chars[i].codePointAt(0).toString(16).toUpperCase()
-                            if (pad) while (number.length < 4) number = '0'+number
-                            str += number+' '
+                            if (pad>0) while (number.length < pad) number = '0'+number
+                            if (!mixed) str += number+' '
+                            else str += number
                             break
                 case 'zerox':  number = chars[i].codePointAt(0).toString(16).toUpperCase()
-                            if (pad) while (number.length < 4) number = '0'+number
+                            if (pad>0) while (number.length < pad) number = '0'+number
                             str += '0x'+number
                             break
                 case 'unicode': number = chars[i].codePointAt(0).toString(16).toUpperCase()
-                            if (pad) while (number.length < 4) number = '0'+number
+                            if (pad>0) while (number.length < pad) number = '0'+number
                             str += 'U+'+number
                             break
                 case 'dec': number = cp
-                            str += number+' '
-                }
+                            if (!mixed) str += number+' '
+                             else str += number               }
             }
         }
 	return str.trim()

@@ -69,6 +69,7 @@ label {
     border: 1px solid #ccc;
     border-radius: 5px;
     padding: 1px 2px;
+    white-space: nowrap;
     }
 label:hover, button:hover {
     background-color: antiquewhite;
