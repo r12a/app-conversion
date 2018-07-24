@@ -92,6 +92,118 @@ function getParameters (node) {
 	}
 
 
+function extractEscapes (strIn) {
+    // strips away everything except the escapes from the string in the green box
+    
+    strIn = ' '+strIn
+    strIn += '             '
+    var str = ''
+    var hexSet = new Set(['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'])
+    var separatorSet = new Set([' ',',','<','(','{','-','+','[','/','|','"','\'',':',';'])
+
+    
+    var chars = [...strIn]
+	for (let i=0; i<chars.length; i++) {
+        if (chars[i] === '&' && chars[i+1]==='#' && chars[i+2]==='x') {
+            let p = i+3
+            str += '&#x'
+            while (p < chars.length && chars[p] !== ';') str += chars[p++]
+            str += ';'
+            i = p
+            }
+        else if (chars[i] === '&' && chars[i+1]==='#') {
+            let p = i+2
+            str += '&#'
+            while (p < chars.length && chars[p] !== ';') str += chars[p++]
+            str += ';'
+            i = p
+            }
+        else if (chars[i]==='\\' && chars[i+1]==='u' && chars[i+2]==='{') {
+            let p = i+3
+            str += '\\u{'
+            while (p < chars.length && chars[p] !== '}') str += chars[p++]
+            str += '}'
+            i = p
+            }
+        else if (chars[i]==='\\' && chars[i+1]==='x' && chars[i+2]==='{') {
+            let p = i+3
+            str += '\\x{'
+            while (p < chars.length && chars[p] !== '}') str += chars[p++]
+            str += '}'
+            i = p
+            }
+         else if (chars[i]==='\\' && chars[i+1]==='u') {
+            let p = i+2
+            str += '\\u'
+            while (p < chars.length && hexSet.has(chars[p].toLowerCase())) str += chars[p++]
+            str += ''
+            i = p-1
+            }
+         else if (chars[i]==='\\' && chars[i+1]==='x') {
+            let p = i+2
+            str += '\\x'
+            while (p < chars.length && p<i+4) str += chars[p++]
+            str += ''
+            i = p-1
+            }
+         else if (chars[i]==='\\' && chars[i+1]==='U') {
+            let p = i+2
+            str += '\\U'
+            while (p < chars.length && p<i+10 && hexSet.has(chars[p].toLowerCase())) str += chars[p++]
+            str += ''
+            i = p-1
+            }
+         else if (chars[i]==='U' && chars[i+1]==='+') {
+            let p = i+2
+            str += 'U+'
+            while (p < chars.length && hexSet.has(chars[p].toLowerCase()) && p<i+8) str += chars[p++]
+            str += ''
+            i = p-1
+            }
+         else if (chars[i]==='0' && chars[i+1]==='x') {
+            let p = i+2
+            str += ' 0x'
+            while (p < chars.length && hexSet.has(chars[p].toLowerCase()) && p<i+8) str += chars[p++]
+            str += ''
+            i = p-1
+            }
+         else if (chars[i]==='%' && hexSet.has(chars[i+1].toLowerCase()) && hexSet.has(chars[i+2].toLowerCase())) {
+            let p = i+1
+            str += '%'
+            while (p < chars.length && p<i+3) str += chars[p++]
+            str += ''
+            i = p-1
+            }
+         else if (chars[i]==='\\' && hexSet.has(chars[i+1].toLowerCase()) && hexSet.has(chars[i+2].toLowerCase())) {
+            let p = i+1
+            str += '\\'
+            while (p < chars.length && p<i+7 && hexSet.has(chars[p].toLowerCase())) str += chars[p++]
+            str += ''
+            i = p-1
+            }
+         else if ((document.getElementById('numbers').value==='hex' || document.getElementById('numbers').value==='dec') && hexSet.has(chars[i].toLowerCase()) && i<chars.length-3 && separatorSet.has(chars[i-1].toLowerCase()) && hexSet.has(chars[i+1].toLowerCase())) {
+            let p = i+1
+            str += ' '+chars[i]
+            while (p < chars.length-3 && p<i+6 && hexSet.has(chars[p].toLowerCase())) str += chars[p++]
+            str += ''
+            i = p-1
+            }
+//         else if (i<chars.length-3 && chars[i]===' ' && hexSet.has(chars[i+1].toLowerCase()) && hexSet.has(chars[i+2].toLowerCase()) && (document.getElementById('numbers').value==='hex' || document.getElementById('numbers').value==='dec')) {
+//            let p = i+1
+//            str += ' '
+//            while (p < chars.length-3 && p<i+8 && hexSet.has(chars[p].toLowerCase())) str += chars[p++]
+//            str += ''
+//            i = p-1
+//            }
+       else {str += ' ' } // do nothing
+        }
+    
+    str = str.replace(/\s+/g,' ')
+    return str.trim()
+    }
+
+
+
 function hex2char ( hex ) {
 	// converts a single hex number to a character
 	// note that no checking is performed to ensure that this is just a hex number, eg. no spaces etc

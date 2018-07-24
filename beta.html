@@ -63,28 +63,13 @@ textarea { padding: 0 5px; }
                 return false;" style="font-size:140%;" >Convert</button>
                 
       <span style="padding-top: 20px;"><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('escapedInput').focus();document.getElementById('escapedInput').select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('escapedInput').focus();document.getElementById('escapedInput').select();" />
-       <!--span class="options"> Convert bare numbers as</span>
-    
-    <button value="Convert" 
-				onclick="displayResults(convertAllEscapes(escapedInput.value, 'hex'), escapedInput.id);
-                return false;" >Hex code points</button>
-      <button value="Convert" 
-				onclick="displayResults(convertAllEscapes(escapedInput.value, 'dec'), escapedInput.id);
-                return false;" >Dec code points</button>
-      <button value="Convert" 
-				onclick="displayResults(convertAllEscapes(escapedInput.value, 'utf8'), escapedInput.id);
-                return false;" >UTF-8 units</button>
-      <button value="Convert" 
-				onclick="displayResults(convertAllEscapes(escapedInput.value, 'utf16'), escapedInput.id);
-                return false;" >UTF-16 units</button-->
-
 
         <span class="options">
 <label>Treat bare numbers as 
 <select id="numbers" style="border: 0; color: brown; font-size: 90%;">
         <option value="none">Just numbers</option>
         <option value="hex">Hex code points</option>
-        <option value="dec">Dec code point</option>
+        <option value="dec">Dec code points</option>
         <option value="utf8">UTF-8 units</option>
         <option value="utf16">UTF-16 units</option>
 </select>
@@ -92,8 +77,12 @@ textarea { padding: 0 5px; }
 
         &nbsp;&nbsp;&nbsp;
 
-        <label>Convert \n etc<input type="checkbox" id="singleletterescapes" /></label>
-    </span><br/>
+        <label>Convert \n etc<input type="checkbox" id="singleletterescapes" checked /></label>
+     </span>
+     &nbsp;&nbsp;&nbsp;
+
+<button id="extract" onClick="escapedInput.value = extractEscapes(document.getElementById('escapedInput').value)">Extract</button>
+    <br/>
   <textarea id="escapedInput" name="escapedInput" rows="3" cols="5" style="background-color: #DFD; color:#333; height:7em;"></textarea></td>
   </tr>
   
@@ -342,14 +331,28 @@ onclick="decNCRs.value = convertCharStr2SelectiveCPs(convertDecNCR2Char(decNCRs.
   </div>
 </aside>
 
-<p id="status">Updated <!-- #BeginDate format:IS1m -->2018-07-24  12:16<!-- #EndDate -->  &bull; tags <a href="http://rishida.net/blog/index.php?tag=converter" title="Show all blog posts tagged with 'converter'">converter</a>, <a href="http://rishida.net/blog/?tag=scriptnotes" title="Show all blog posts tagged with 'scriptnotes'">scriptnotes</a></p>
+<p id="status">Updated <!-- #BeginDate format:IS1m -->2018-07-24  19:25<!-- #EndDate -->  &bull; tags <a href="http://rishida.net/blog/index.php?tag=converter" title="Show all blog posts tagged with 'converter'">converter</a>, <a href="http://rishida.net/blog/?tag=scriptnotes" title="Show all blog posts tagged with 'scriptnotes'">scriptnotes</a></p>
 
 
 <section>
   <h2>Standard use</h2>
   <p>Most of the time you will probably want to drop the text to be converted into the field with the green background, and hit the associated <code>Convert</code> button. This will convert all escapes to characters, then convert those into each of the forms listed against the boxes below.</p>
+  
   <p>If your text contains bare numbers that you also want to convert, use the select control to the right. (Be aware, however, that in this case something like 'ab' could be interpreted as a hex number.)</p>
-    <p>Note, also, that the escapes \n, \t, \b, and \" etc, are not recognised by default. If you check the box next to <code>Convert \n etc</code> they will also be recognised. For full CSS behaviour here, use the CSS input field.</p>
+  
+    <p>Note, also, that the escapes \n, \t, \b, and \" etc, are recognised by default. If you check the box next to <code>Convert \n etc</code> they will be ignored. For full CSS behaviour here, use the CSS input field.</p>
+    
+    <p>The <code class="kw" translate="no">Extract</code> button strips away everything but the escapes. For example, it will turn <code>The first row is U+0A73 
+ura
+, U+0A05 
+a
+, U+0A72 
+iri
+, U+0A38 
+sa
+, U+0A39 
+ha.</code>
+into <code>U+0A73 U+0A05 U+0A72 U+0A38 U+0A39</code>. It doesn't recognise escapes such as \n, \t, etc. Nor does it recognise character entities, such as <code>&amp;aacute;</code>. If you have selected <code class="kw" translate="no">Hex code points</code> or <code class="kw" translate="no">Dec code points</code> in the adjacent select control, it will also leave behind hex or decimal numbers. For example, it will turn <code>&lt;0915, 094E, 0947></code> into <code>0915 094E 0947</code>. Note, however, that it may not always get this right. A word like 'decomposition' will result in 'dec' being treated as a number. It only detects numbers if they are preceded by a space, a predefined set of punctuation marks, or the start of the text.  It treats UTF-8 and UTF-16 code units as hex code point numbers.</p>
     
     <p><span class="leadin">Special use.</span> If you only want to convert a specific type of escape and leave all others untouched, paste the text into one of the other boxes and hit its associated <code>Convert</code> button.</p>
     
@@ -513,6 +516,7 @@ onclick="decNCRs.value = convertCharStr2SelectiveCPs(convertDecNCR2Char(decNCRs.
 <li>Bugfix: <a href="https://github.com/r12a/app-conversion/issues/3">Issue #3 Missing space separator between first two characters in some strings</a></li>
 <li>Removed choice to keep Latin1 characters. Only ASCII allowed.</li>
 <li>Improved  the Hex/UTF-32 and Decimal boxes, so that conversion of text with or without ASCII characters  works better. Note that, when <code class="kw" translate="no">Keep ASCII</code> is on the conversion is no longer reversible, and may contain character sequences that fail to convert unless broken up by spaces manually.</li>
+<li>Add an <code class="kw" translate="no">Extract</code> button to the green box that strips away everything but the escapes.</li>
 </ul>
 <p>Once this version appears to be stable, it will replace the old version at <a href="https://r12a.github.io/app-conversion">https://r12a.github.io/app-conversion</a>, and this URL will become a redirect.</p>
 
