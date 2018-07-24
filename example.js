@@ -3,7 +3,7 @@
 
 var example_test = `The decomposition mapping is <츠, U+11B8>, and not <0x110E, ᅳ, 11B8>.  1234 (ethiopic/latin?)
 <p>The title says ‫פעילות הבינאום, W3C‬ &rlm;in Hebrew</p>
-\\nabc\\x09áßç\\tक際👽  
+\\nabc\\x09áßç\\tक際👽 \t%E0%A4%95%E9%9A%9B%F0%9F%91%BD
 html/xml (hex)\\x09&#x00E7;&#x0916;&#x0940;&#x570B;&#x1F47D;&Aacute;
 html/xml (dec)\\x09&#231;&#2326;&#2368;&#22283;&#128125;&aacute;
 javascript\\x09\\u00E7\\u0916\\u0940\\u570B\\uD83D\\uDC7D
