@@ -50,28 +50,24 @@ function displayResults(str, src) {
 		}
 	if (src !== 'Unicode') { 
 		preserve = 'none';
-		if (document.getElementById('unicodelatin1').checked) { preserve = 'latin1' }
-		else if (document.getElementById('unicodeascii').checked) { preserve = 'ascii' } 
+		if (document.getElementById('unicodeascii').checked) { preserve = 'ascii' } 
 		Unicode.value = convertCharStr2CP(str, preserve, 4, 'unicode');
 		}
 	if (src !== 'zeroX') { 
 		preserve = 'none'
-		if (document.getElementById('zeroXlatin1').checked) { preserve = 'latin1'; }
-		else if (document.getElementById('zeroXascii').checked) { preserve = 'ascii'; } 
+		if (document.getElementById('zeroXascii').checked) { preserve = 'ascii'; } 
 		zeroX.value = convertCharStr2CP(str, preserve, 0, 'zerox');
 		}
 
 
     if (src !== 'codePoints') { 
 		preserve = 'none'
-		if (document.getElementById('hexcplatin1').checked) { preserve = 'latin1' }
-		else if (document.getElementById('hexcpascii').checked) { preserve = 'ascii' } 
+		if (document.getElementById('hexcpascii').checked) { preserve = 'ascii' } 
 		codePoints.value = convertCharStr2CP(str, preserve, document.getElementById('hexcppad').value, 'hex', document.getElementById('hexcpascii').checked)
 		}
 	if (src != 'decCodePoints') { 
 		preserve = 'none';
-		if (document.getElementById('deccplatin1').checked) { preserve = 'latin1'; }
-		else if (document.getElementById('deccpascii').checked) { preserve = 'ascii'; } 
+		if (document.getElementById('deccpascii').checked) { preserve = 'ascii'; } 
 		decCodePoints.value = convertCharStr2CP(str, preserve, 0, 'dec', document.getElementById('deccpascii').checked)
 		}
 	if (src != 'UTF8') { 
@@ -425,7 +421,7 @@ function convertGreenNumbers2Char ( str, type ) {
 	// type: string enum [none, hex, dec, utf8, utf16], what to treat numbers as
 	
 	if (type === 'hex') {
-		str = str.replace(/(\b[A-Fa-f0-9]{2,6}\b)/g, 
+		str = str.replace(/(\b[A-Fa-f0-9]{2,8}\b)/g, 
 					function(matchstr, parens) {
 						return hex2char(parens)
 						}
@@ -493,7 +489,6 @@ function convertNumbers2Char ( str, type ) {
 						}
 						)
 		}
-        console.log(str)
 	return str
 	}
 
@@ -510,7 +505,6 @@ function convertSpaceSeparatedNumbers2Char ( str, type ) {
 	if (type === 'hex') {
 		str = str.replace(/([A-Fa-f0-9]{2,8}\b)/g, 
 					function(matchstr, parens) {
-                    console.log(parens)
 						return hex2char(parens)
 						}
 						)
@@ -537,7 +531,6 @@ function convertSpaceSeparatedNumbers2Char ( str, type ) {
 						}
 						)
 		}
-        console.log(str)
 	return str.replace(/§±§/g,'')
 	}
 
@@ -1286,7 +1279,7 @@ function convertCharStr2CSS ( str ) {
 
 
 
-function convertCharStr2CP ( textString, parameters, pad, type, mixed ) { console.log(mixed)
+function convertCharStr2CP ( textString, parameters, pad, type, mixed ) {
 	// converts a string of characters to code points, separated by space
 	// textString: string, the string to convert
 	// parameters: string enum [ascii, latin1], a set of characters to not convert
@@ -1296,6 +1289,8 @@ function convertCharStr2CP ( textString, parameters, pad, type, mixed ) { consol
 	var str = ''
     var number
     var chars = [...textString]
+
+    chars[chars.length] = ' '
 	for (let i=0; i<chars.length; i++) {
         var cp = chars[i].codePointAt(0)
         
@@ -1306,7 +1301,10 @@ function convertCharStr2CP ( textString, parameters, pad, type, mixed ) { consol
                 case 'hex': number = chars[i].codePointAt(0).toString(16).toUpperCase()
                             if (pad>0) while (number.length < pad) number = '0'+number
                             if (!mixed) str += number+' '
-                            else str += number
+                            else { 
+                                if (chars[i+1].codePointAt(0) > 127) str += number+' '
+                                else str += number
+                                }
                             break
                 case 'zerox':  number = chars[i].codePointAt(0).toString(16).toUpperCase()
                             if (pad>0) while (number.length < pad) number = '0'+number
@@ -1318,7 +1316,11 @@ function convertCharStr2CP ( textString, parameters, pad, type, mixed ) { consol
                             break
                 case 'dec': number = cp
                             if (!mixed) str += number+' '
-                             else str += number               }
+                            else { 
+                                if (chars[i+1].codePointAt(0) > 127) str += number+' '
+                                else str += number
+                                }
+                             }
             }
         }
 	return str.trim()
