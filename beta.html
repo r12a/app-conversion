@@ -296,11 +296,15 @@ onclick="decNCRs.value = convertCharStr2SelectiveCPs(convertDecNCR2Char(decNCRs.
 <input class="check" type="checkbox" id="hexcpascii" /></label>
                 
       
-      <label>Pad <select id="hexcppad" onclick="document.getElementById('hexcppad').checked =false;"  style="border: 0; color: brown; font-size: 90%;">
-      <option value="0">0</option>
+      <label>Pad <select id="hexcppad" onclick="
+                 if (document.getElementById('hexcpascii').checked) {
+                    codePoints.value = convertCharStr2CP(convertNumbers2Char(codePoints.value, 'hex'), 'ascii', document.getElementById('hexcppad').value, 'hex', document.getElementById('hexcpascii').checked) }
+                else { codePoints.value = convertCharStr2CP(convertSpaceSeparatedNumbers2Char(codePoints.value, 'hex'), 'none', document.getElementById('hexcppad').value, 'hex', document.getElementById('hexcpascii').checked)} 
+      ;"  style="border: 0; color: brown; font-size: 90%;">
+      <!--option value="0">0</option-->
       <option value="2">2</option>
       <option value="4" selected>4</option>
-      <option value='8'>8</option>
+      <option value="8">8</option>
       </select></label>
     </span><br/>
       <textarea id="codePoints" name="codePoints" rows="3" cols="5"></textarea></td>
@@ -338,7 +342,7 @@ onclick="decNCRs.value = convertCharStr2SelectiveCPs(convertDecNCR2Char(decNCRs.
   </div>
 </aside>
 
-<p id="status">Updated <!-- #BeginDate format:IS1m -->2018-07-24  9:51<!-- #EndDate -->  &bull; tags <a href="http://rishida.net/blog/index.php?tag=converter" title="Show all blog posts tagged with 'converter'">converter</a>, <a href="http://rishida.net/blog/?tag=scriptnotes" title="Show all blog posts tagged with 'scriptnotes'">scriptnotes</a></p>
+<p id="status">Updated <!-- #BeginDate format:IS1m -->2018-07-24  11:34<!-- #EndDate -->  &bull; tags <a href="http://rishida.net/blog/index.php?tag=converter" title="Show all blog posts tagged with 'converter'">converter</a>, <a href="http://rishida.net/blog/?tag=scriptnotes" title="Show all blog posts tagged with 'scriptnotes'">scriptnotes</a></p>
 
 
 <section>
@@ -373,14 +377,16 @@ onclick="decNCRs.value = convertCharStr2SelectiveCPs(convertDecNCR2Char(decNCRs.
       
     <h3>Hexadecimal NCRs</h3>
       <p><strong> When conversion puts something here:</strong> By default, everything except ASCII characters is converted. </p>
-      <p>You can use the checkboxes to specify whether ANSI (Latin1) characters remain unchanged, or whether all characters are converted.</p>
-<p><strong>If you start a conversion from here:</strong> It can be a mix of text and  escapes. Only hexadecimal NCRs are converted.</p>
+      <p>You can use the <code class="kw" translate="no">Show ascii</code> checkbox to specify that you want all characters to be converted.</p>
+    
+    <p><strong>If you start a conversion from here:</strong> It can be a mix of text and  escapes. Only hexadecimal NCRs are converted.</p>
       
       
       
     <h3>Decimal NCRs</h3>
       <p><strong> When conversion puts something here:</strong>&nbsp; By default, everything except ASCII characters is converted. </p>
-      <p>You can use the checkboxes to specify whether ANSI (Latin1) characters remain unchanged, or whether all characters are converted.</p>
+      <p>You can use the <code class="kw" translate="no">Show ascii</code> checkbox to specify that you want all characters to be converted.</p>
+      
       <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and escapes. Only decimal NCRs are converted.</p>
       
        
@@ -441,7 +447,7 @@ onclick="decNCRs.value = convertCharStr2SelectiveCPs(convertDecNCR2Char(decNCRs.
      
     <h3>U+hex</h3>
       <p><strong> When conversion puts something here:</strong>&nbsp; By default, everything except ASCII characters is converted.</p>
-      <p>You can use the checkboxes to specify whether Latin1 characters remain unchanged, or whether all characters are converted.</p>
+      <p>You can use the <code class="kw" translate="no">Show ascii</code> checkbox to specify that you want all characters to be converted.</p>
       <p>If you want to insert spaces between adjacent escapes (only) click on the <code>Separate</code> button. Note, however, that if you now click on the <code>Convert</code> button for that field, the output will contain those extra spaces.</p>
       <p class="warning"><strong>Hint:</strong> to separate a sequence of characters by spaces, paste the characters into the field with a green background and click <code>Convert</code>. Then click <code>Separate</code> followed by <code>Convert</code> in the <code>U+hex</code> field and look in the <code>Characters</code> field for the result.</p>
 
@@ -449,41 +455,45 @@ onclick="decNCRs.value = convertCharStr2SelectiveCPs(convertDecNCR2Char(decNCRs.
 
       
     <h3>0x...</h3>
-      <p><strong> When conversion puts something here:</strong>&nbsp; By default, everything except ASCII characters is converted. You can use the checkboxes to specify whether Latin1 characters remain unchanged, or whether all characters are converted.</p>
+      <p><strong> When conversion puts something here:</strong>&nbsp; By default, everything except ASCII characters is converted.</p>
+      <p>You can use the <code class="kw" translate="no">Show ascii</code> checkbox to specify that you want all characters to be converted.</p>
       <p>If you want to insert spaces between adjacent escapes (only) click on the <code>Separate</code> button. Note, however, that if you now click on the <code>Convert</code> button for that field, the output will contain those extra spaces.</p>
       <p class="warning"><strong>Hint:</strong> to separate a sequence of characters by spaces, paste the characters into the field with a green background and click <code>Convert</code>. Then click <code>Separate</code> followed by <code>Convert</code> in the <code>0x...</code> field and look in the <code>Characters</code> field for the result.</p>
       
       <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and hexadecimal 0x... escapes. Only 0x...escapes are converted.</p>
 
 
-    <h3>Hexadecimal code points</h3>
-      <p><strong> When conversion puts something here:</strong>&nbsp; By default, you'll see Hex numbers only, all separated by spaces.  If you use the checkbox to specify whether ASCII or Latin1 (ANSI) characters remain unchanged, a space is inserted before a code point if the character just before it is in the range [A-Za-z0-9]. (</p>
-      <p class="warning"><strong>Note:</strong> These checkboxes only work during conversions, they don't change text already in the output field.</p>
-      <p class="warning"><strong>Note:</strong> After sending output to this box you will get a different result in the other boxes if you immediately click on <code>Convert</code> above this box.</p>
-      
-      <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and hex numbers. Only hex numbers are converted.</p>
-    	<p class="warning"><strong>Note</strong> that a sequence of two or more characters in the range a-f, such as <samp>cafe</samp>, will be treated as a hexadecimal number representing a character.</p>
-
-      
-    <h3>Decimal code points</h3>
-      <p><strong> When conversion puts something here:</strong>&nbsp; By default, you'll see decimal numbers only, all separated by spaces.  </p>
-      <p>If you use the checkbox to specify whether ASCII or Latin1 (ANSI) characters remain unchanged, a space is inserted before a code point if the character just before it is in the range [A-Za-z0-9].</p>
-      <p class="warning"><strong>Note:</strong> These checkboxes only work during conversions, they don't change text already in the output field.</p>
-      <p class="warning"><strong>Note:</strong> After sending output to this box you will get a different result in the other boxes if you immediately click on <code>Convert</code> above this box.</p>
-
-      <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and decimal numbers. Only decimal numbers are converted.</p>
-
+   
       
     <h3>UTF-8 code units</h3>
       <p><strong> When conversion puts something here:</strong>&nbsp; You'll see pairs of 2-digit hexadecimal numbers representing the bytes that make up the text when encoded in UTF-8.</p>
 
       <p><strong>If you start a conversion from here:</strong>&nbsp; It must be hexadecimal byte codes only, separated by spaces.</p>
 
+
       
     <h3>UTF-16 code units</h3>
       <p><strong> When conversion puts something here:</strong>&nbsp; You'll see hexadecimal numbers of 1 to 4 digits representing the UTF-16 code units for the text converted. Supplementary characters are represented by two code units.</p>
 
       <p><strong>If you start a conversion from here:</strong>&nbsp; It must be hexadecimal code units only, separated by spaces.</p>
+
+
+
+    <h3>Hexadecimal code points</h3>
+      <p><strong> When conversion puts something here:</strong>&nbsp; By default, you'll see Hex numbers only, all separated by spaces.</p>
+      <p>If you use the checkbox <code class="kw" translate="no">Keep ascii</code> ASCII characters remain unchanged, and a space is inserted after any hex sequence followed by another hex sequence.</p>
+      <p>The <code class="kw" translate="no">Pad</code> selector allows you to indicate how much padding to apply to the hex numbers. This control applies changes when you select a different number, as well as when a conversion is triggered. If the Hex/UTF-32 box contains mixed hex values and ASCII characters see the warning just below.</p>
+      
+      <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and hex numbers. Only hex numbers are converted.</p>
+    	<p class="warning"><strong>Warning:</strong> It is not recommended to  click on the <code class="kw" translate="no">Convert</code> button for <code class="kw" translate="no">Hex/UTF-32</code> when that box contains mixed ASCII and hex numbers, unless you are sure that the box contents can be reliably parsed. One reason is that a sequence of two or more characters in the range a-f, such as <samp>cafe</samp>, will be treated as a hexadecimal number representing a character. Another reason is that if spaces are not inserted between a hex sequence and adjacent ASCII characters, this can cause problems if you try to convert, such as W3C202C being read as W+3C202C (which raises a code point out of range error). Furthermore, the extra spaces inserted when a conversion results in mixed text in this box are also carried through if you then click on the <code class="kw" translate="no">Convert</code> button for this box.</p>
+
+      
+    <h3>Decimal code points</h3>
+      <p><strong> When conversion puts something here:</strong>&nbsp; By default, you'll see decimal numbers only, all separated by spaces.  </p>
+      <p>If you the <code class="kw" translate="no">Keep ascii</code> checkbox is checked, the result will be a mix of decimal code point numbers and ASCII text. A space is inserted before a code point value if it is immediately followed by another decimal code point value.</p>
+
+      <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and decimal numbers. Only decimal numbers are converted.</p>
+    	<p class="warning"><strong>Warning:</strong> It is not recommended to  click on the <code class="kw" translate="no">Convert</code> button for the <code class="kw" translate="no">Decimal</code> box when that box contains mixed ASCII and decimal numbers, unless you are sure that the box contents can be reliably parsed. One reason is that if spaces are not inserted between a hex sequence and adjacent digits, this can cause problems if you try to convert. Furthermore, the extra spaces inserted when a conversion results in mixed text in this box are also carried through if you then click on the <code class="kw" translate="no">Convert</code> button for this box.</p>
 </section>
 </details>
 

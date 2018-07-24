@@ -462,7 +462,6 @@ function convertNumbers2Char ( str, type ) {
 	if (type === 'hex') {
 		str = str.replace(/([A-Fa-f0-9]{2,8}\b)/g, 
 					function(matchstr, parens) {
-                    console.log(parens)
 						return hex2char(parens)
 						}
 						)

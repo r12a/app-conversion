@@ -77,3 +77,6 @@ label:hover, button:hover {
 summary {
     cursor:pointer;
     }
+details strong {
+    font-size: 110%;
+    }
