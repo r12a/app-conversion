@@ -338,7 +338,7 @@ onclick="decNCRs.value = convertCharStr2SelectiveCPs(convertDecNCR2Char(decNCRs.
   </div>
 </aside>
 
-<p id="status">Updated <!-- #BeginDate format:IS1m -->2018-07-23  7:58<!-- #EndDate -->  &bull; tags <a href="http://rishida.net/blog/index.php?tag=converter" title="Show all blog posts tagged with 'converter'">converter</a>, <a href="http://rishida.net/blog/?tag=scriptnotes" title="Show all blog posts tagged with 'scriptnotes'">scriptnotes</a></p>
+<p id="status">Updated <!-- #BeginDate format:IS1m -->2018-07-24  9:51<!-- #EndDate -->  &bull; tags <a href="http://rishida.net/blog/index.php?tag=converter" title="Show all blog posts tagged with 'converter'">converter</a>, <a href="http://rishida.net/blog/?tag=scriptnotes" title="Show all blog posts tagged with 'scriptnotes'">scriptnotes</a></p>
 
 
 <section>
@@ -502,7 +502,7 @@ onclick="decNCRs.value = convertCharStr2SelectiveCPs(convertDecNCR2Char(decNCRs.
 <li>The Hex/UTF-32 box allows you to set padding to different lengths, including 8 digit code points, which is useful for UTF-32.</li>
 <li>Bugfix: <a href="https://github.com/r12a/app-conversion/issues/3">Issue #3 Missing space separator between first two characters in some strings</a></li>
 <li>Removed choice to keep Latin1 characters. Only ASCII allowed.</li>
-<li>Improved  the Hex/UTF-32 and Decimal boxes, so that conversion of text with or without ASCII characters  works better. Note that, when <code class="kw" translate="no">Keep ASCII</code> is on, a sequence of code point values is not separated – that setting only intended for use with text that has separated code point values.</li>
+<li>Improved  the Hex/UTF-32 and Decimal boxes, so that conversion of text with or without ASCII characters  works better. Note that, when <code class="kw" translate="no">Keep ASCII</code> is on the conversion is no longer reversible, and may contain character sequences that fail to convert unless broken up by spaces manually.</li>
 </ul>
 <p>Once this version appears to be stable, it will replace the old version at <a href="https://r12a.github.io/app-conversion">https://r12a.github.io/app-conversion</a>, and this URL will become a redirect.</p>
 
