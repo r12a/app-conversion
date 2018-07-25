@@ -99,7 +99,8 @@ function extractEscapes (strIn) {
     strIn += '             '
     var str = ''
     var hexSet = new Set(['0','1','2','3','4','5','6','7','8','9','a','b','c','d','e','f'])
-    var separatorSet = new Set([' ',',','<','(','{','-','+','[','/','|','"','\'',':',';'])
+    var decSet = new Set(['0','1','2','3','4','5','6','7','8','9'])
+    var separatorSet = new Set([' ',',','<','>','(',')','{','}','-','+','[',']','/','|','"','\'',':',';','\u00AB','\u00BB','\u2018','\u2019','\u201C','\u201D','\u3008','\u3009','\u300A','\u300B','\u300C','\u300D','\u300E','\u300F','\u00B7','\u3001','\u3002'])
 
     
     var chars = [...strIn]
@@ -181,20 +182,20 @@ function extractEscapes (strIn) {
             str += ''
             i = p-1
             }
-         else if ((document.getElementById('numbers').value==='hex' || document.getElementById('numbers').value==='dec') && hexSet.has(chars[i].toLowerCase()) && i<chars.length-3 && separatorSet.has(chars[i-1].toLowerCase()) && hexSet.has(chars[i+1].toLowerCase())) {
+         else if (document.getElementById('numbers').value==='hex' && hexSet.has(chars[i].toLowerCase()) && i<chars.length-3 && separatorSet.has(chars[i-1].toLowerCase()) && hexSet.has(chars[i+1].toLowerCase())) {
             let p = i+1
-            str += ' '+chars[i]
-            while (p < chars.length-3 && p<i+6 && hexSet.has(chars[p].toLowerCase())) str += chars[p++]
-            str += ''
+            let temp = ' '+chars[i]
+            while (p < chars.length-3 && p<i+6 && hexSet.has(chars[p].toLowerCase())) temp += chars[p++]
+            if (separatorSet.has(chars[p].toLowerCase())) str += temp
             i = p-1
             }
-//         else if (i<chars.length-3 && chars[i]===' ' && hexSet.has(chars[i+1].toLowerCase()) && hexSet.has(chars[i+2].toLowerCase()) && (document.getElementById('numbers').value==='hex' || document.getElementById('numbers').value==='dec')) {
-//            let p = i+1
-//            str += ' '
-//            while (p < chars.length-3 && p<i+8 && hexSet.has(chars[p].toLowerCase())) str += chars[p++]
-//            str += ''
-//            i = p-1
-//            }
+         else if (document.getElementById('numbers').value==='dec' && decSet.has(chars[i].toLowerCase()) && i<chars.length-3 && separatorSet.has(chars[i-1].toLowerCase()) && decSet.has(chars[i+1].toLowerCase())) {
+            let p = i+1
+            let temp = ' '+chars[i]
+            while (p < chars.length-3 && p<i+6 && decSet.has(chars[p].toLowerCase())) temp += chars[p++]
+            if (separatorSet.has(chars[p].toLowerCase())) str += temp
+            i = p-1
+            }
        else {str += ' ' } // do nothing
         }
     
