@@ -1403,7 +1403,7 @@ function convertCharStr2CP ( textString, parameters, pad, type, mixed ) {
     var chars = [...textString]
 
     chars[chars.length] = ' '
-	for (let i=0; i<chars.length; i++) {
+	for (let i=0; i<chars.length-1; i++) {
         var cp = chars[i].codePointAt(0)
         
         if (cp <= 127 && parameters.includes('ascii')) str += chars[i]
