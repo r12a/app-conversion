@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<title>Unicode code converter</title>
+<meta name="description" content="Helps you convert between Unicode character numbers, characters, UTF-8 and UTF-16 code units in hex, percent escapes,and Numeric Character References (hex and decimal)." />
+<link rel="stylesheet" href="../shared/style/docs.css" />
+<!--link rel="stylesheet" href="localstyle.css" /-->
+<script src="../shared/code/boilerplate.js"></script>
+
+<style>
+#versionInfo a { font-weight: bold; }
+h2 { font-size: 156%; }
+strong { color: orange; }
+</style>
+</head>
+
+<body class="app">
+<header>
+<div id="header-boilerplate"></div>
+<script>document.getElementById('header-boilerplate').innerHTML = bp_appHeader('../shared/images/world.gif','Unicode code converter help','v9');</script>
+</header>
+
+
+<aside class="sidebar">
+  <div class="section">
+    <h2 class="flush">Related links</h2>
+    <p><a href="../uniview/">UniView app</a></p>
+    <p><a href="../encodings/">Encoding converter app</a></p>
+    <p><a href="../listcharacters/">List characters app</a></p>
+    <p><a href="https://github.com/r12a/app-conversion/">Github repo</a></p>
+    <p><a href="https://github.com/r12a/app-conversion/issues">Raise an issue</a></p>
+  </div>
+</aside>
+
+
+<section>
+  <h2 id="use">Standard use</h2>
+  <p>Most of the time you will probably want to drop the text to be converted into the field with the green background, and hit the associated <code>Convert</code> button. This will convert all escapes to characters, then convert those into each of the forms listed against the boxes below.</p>
+  
+  <p>If your text contains bare numbers that you also want to convert, use the select control to the right. (Be aware, however, that in this case something like 'ab' could be interpreted as a hex number.)</p>
+  
+    <p>Note, also, that the escapes \n, \t, \b, and \" etc, are recognised by default. If you check the box next to <code>Convert \n etc</code> they will be ignored. For full CSS behaviour here, use the CSS input field.</p>
+    
+    <p><span class="leadin">The <code class="kw" translate="no">Extract</code> button</span> strips away everything but the escapes. For example, it will turn "<code>The first row is U+0A73 ura, U+0A05 a, U+0A72 iri, U+0A38 sa, U+0A39 ha.</code>" into "<code>U+0A73 U+0A05 U+0A72 U+0A38 U+0A39</code>".</p>
+    
+    <p>It currently doesn't recognise escapes such as \n, \t, etc. Nor does it recognise character entities, such as <code>&amp;aacute;</code>.</p>
+    
+    <p>If you have selected <code class="kw" translate="no">Hex code points</code> or <code class="kw" translate="no">Dec code points</code> in the adjacent select control, it will also leave behind hex or decimal numbers. For example, it will turn "<code>&lt;0915, 094E, 0947></code>" into "<code>0915 094E 0947</code>" or "<code>0915 0947</code>", respectively. Note, however, that it may not always get this right. Text such as '(dec)' will result in 'dec' being treated as a number. It only detects numbers if they are preceded and followed by a space, a particular set of punctuation marks, or the start/end of the text.  It treats UTF-8 and UTF-16 code units as hex code point numbers.</p>
+    
+    <p><span class="leadin">Special use.</span> If you only want to convert a specific type of escape and leave all others untouched, paste the text into one of the other (grey) boxes and hit its associated <code class="kw" translate="no">Convert</code> button.</p>
+    
+    <p><span class="leadin">Checkboxes.</span> Several of the output fields have checkboxes that allow you to slightly alter the results of a conversion. If an output field already contains a result when you click on a checkbox, you'll often  see a change happen as you click. In a couple of cases, however, this doesn't happen, since it is not possible to produce good results.</p>
+    
+    <p><span class="leadin">Invoking via URL.</span> You can also pass a string to the page using the <code class="kw" translate="no">q</code> parameter in the URI. For example, <a href="/app-conversion/beta?q=Cr%C3%AApes">http://r12a.github.io/app-conversion/?q=Crêpes</a>. You can also pass a string with escapes in it. You will need to be careful to percent-escape characters such as &amp;, + and # which affect the URI syntax. For example,<a href="/app-conversion/beta?q=CrU%2B00EApes"> http://r12a.github.io/app-conversion/beta?q=CrU%2B00EApes</a>.</p>
+</section>
+<section>
+  <h2>Box inputs and outputs</h2>
+    <p>The following describe how the various boxes work, including what happens if you paste or type text into the named field and hit <code>Convert</code>, and  the output in the named field if you hit <code>Convert</code> elsewhere.</p>
+    <h3 id="characters">Characters</h3>
+      <p><strong> When conversion puts something here:&nbsp; </strong>Everything is displayed as characters.</p>
+      <p>&nbsp;You can view more detail for each character by clicking on <code>View in UniView</code>.</p>
+<p><strong>If you start a conversion from here:</strong>  Everything is treated as characters, eg.<samp> U+1234</samp> is not treated as an escape for the purposes of conversion.</p>
+      
+      
+    <h3 id="html">HTML/XML</h3>
+      <p><strong> When conversion puts something here:&nbsp; </strong> Ordinary characters will appear by default, except that <code class="kw" translate="no">&lt;</code> <code class="kw" translate="no">&gt;</code> <code class="kw" translate="no">&quot;</code> and <code class="kw" translate="no">&amp; </code> are converted to character entities. This is useful for preparing examples of sample code for HTML or XML.</p>
+      <p> By default the control <code>Escape invisible characters</code> is checked. This causes certain invisible characters (such as <span class="uname">RLM</span>) or ambiguous characters (such as <span class="uname">NO-BREAK SPACE</span>) to be converted to escaped form. The characters affected will be added to over time.</p>
+      <p>If <code>Convert bidi controls to HTML markup</code> is selected <span class="uname">RLE</span>, <span class="uname">LRE</span>, <span class="uname">RLI</span>, <span class="uname">LRI</span>, <span class="uname">FSI</span>, <span class="uname">PDF</span> and <span class="uname">PDI</span> are converted to HTML markup based on a <code>span</code> element.</p>
+      <p class="warning">Hint: if you want to get the result into source code form, once the initial conversion has been done just click <code>Convert</code> above this text area, and then look in the <code>Characters</code> text area</p>
+      <p class="warning">Note that if your text contains RLO or LRO plus PDF, the PDF will incorrectly be converted to <code>&lt;/span&gt;</code> at the moment.  I may fix this (and thereby allow RLO/LRO conversion too) at a later date.</p>
+      <p><strong>If you start a conversion from here:</strong> Use HTML or XML markup. Numeric character references or HTML character entities other than <code class="kw" translate="no">&amp;lt;</code> <code class="kw" translate="no">&amp;gt;</code> <code class="kw" translate="no">&amp;quot;</code> and <code class="kw" translate="no">&amp;amp;</code> are converted to ordinary characters during conversion.</p>
+      
+      
+    <h3 id="hexNCRs">Hex NCRs</h3>
+      <p><strong> When conversion puts something here:</strong> By default, everything except ASCII characters is converted. </p>
+      <p>You can deselect the <code class="kw" translate="no">Show ascii</code> checkbox to specify that you want all characters to be converted.</p>
+    
+    <p><strong>If you start a conversion from here:</strong> It can be a mix of text and  escapes. Only hexadecimal NCRs are converted.</p>
+      
+      
+      
+    <h3 id="decNCRs">Decimal NCRs</h3>
+      <p><strong> When conversion puts something here:</strong>&nbsp; By default, everything except ASCII characters is converted. </p>
+      <p>You can deselect the <code class="kw" translate="no">Show ascii</code> checkbox to specify that you want all characters to be converted.</p>
+      
+      <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and escapes. Only decimal NCRs are converted.</p>
+      
+       
+      
+    <h3 id="javascript">JavaScript/Java/C</h3>
+      <p><strong> When conversion puts something here:</strong>&nbsp; By default, everything except visible ASCII characters is converted to numeric escapes, and the following escapes are substituted for ASCII characters: \0, \b, \t, \v, \f, \\.</p>
+      <p>The default output to this field is in the ES6 style, which is much more useful when dealing with supplementary characters (such as emoji), and is well supported by major browsers, except for Internet Explorer. To generate the old style escapes, or escapes for Java, deselect the <code>ES6-style</code> checkbox. A small number of Java-only named escapes such as <code class="kw" translate="no">\e</code> are rendered as numeric escapes.</p>
+      <p>If <code>C-style</code> is checked, supplementary characters are rendered by a single number, eight digits long, rather than two adjacent surrogate code point numbers.</p>
+      <p>If <code>\n etc</code> is checked, line feeds (\n), tabs (\t), and quotation marks (\") are also escaped.</p>
+      <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and escapes. Only the following types of escape are recognised:</p>
+      <ul>
+      <li>\u{1F468}</li>
+      <li>\u1234 (requires 2 escapes for supplementary characters)</li>
+      <li>\U00123456</li>
+      <li>\x10</li>
+      <li>\0 \b \t \n \r \v \f \\ \"</li>
+      </ul>
+      
+       
+      
+    <h3 id="rust">Rust/Ruby</h3>
+      <p><strong> When conversion puts something here:</strong>&nbsp; By default, everything except visible ASCII characters is converted to \u{...} escapes, and the following escapes are substituted for ASCII characters: \0, \b, \t, \v, \f, \\. Output for other characters in the ranges U+0001-U+001F and U+0080-U+009F (ie. invisible control characters) uses the \x.. escape format.</p>
+      <p>If <code>\n etc</code> is checked, line feeds (\n), tabs (\t), and quotation marks (\") are also escaped.</p>
+
+    <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and escapes. Only the following types of escape are recognised:</p>
+<ul>
+      <li>\u{1F468}</li>
+      <li>\u{1234 1235 1236}</li>
+      <li>\x10</li>
+      <li>\0 \b \t \n \r \v \f \\ \"</li>
+</ul>
+      
+       
+      
+    <h3 id="perl">Perl/UTR#18</h3>
+      <p><strong> When conversion puts something here:</strong>&nbsp; By default, everything except visible ASCII characters is converted to \x{...} escapes, and the following escapes are substituted for ASCII characters: \0, \b, \t, \v, \f, \\. Output for other characters in the ranges U+0001-U+001F and U+0080-U+009F (ie. invisible control characters) uses the \x.. escape format.</p>
+      <p>If <code>\n etc</code> is checked, line feeds, tabs, and quotation marks are also escaped.</p>
+      
+      <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and escapes. Only the following types of escape are recognised:</p>
+      <ul>
+      <li>\x{1F468}</li>
+      <li>\x10</li>
+      <li>\0 \b \t \n \r \v \f \\ \"</li>
+      </ul>
+      
+      
+    <h3 id="css">CSS</h3>
+      <p><strong> When conversion puts something here:</strong>&nbsp; It does not escape non-control ASCII  characters. Output content uses 6-digit escape forms <em>followed by a space</em> for supplementary characters, and 4-digit escapes followed by a space for all other escaped characters.</p>
+
+      <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and escapes.</p>
+
+      
+    <h3 id="percentEncoding">Percent-encoding for URIs</h3>
+      <p><strong> When conversion puts something here:</strong>&nbsp; Characters allowed in URI syntax are not converted.</p>
+     
+      <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and escapes. Only percent escapes are converted.</p>
+     
+     
+    <h3 id="UHex">U+hex</h3>
+      <p><strong> When conversion puts something here:</strong>&nbsp; By default, everything except ASCII characters is converted.</p>
+      <p>You can deselect the <code class="kw" translate="no">Show ascii</code> checkbox to specify that you want all characters to be converted.</p>
+      <p>If you want to insert spaces between adjacent escapes (only) click on the <code>Separate</code> button. Note, however, that if you now click on the <code>Convert</code> button for that field, the output will contain those extra spaces.</p>
+      <p class="warning"><strong>Hint:</strong> to separate a sequence of characters by spaces, paste the characters into the field with a green background and click <code>Convert</code>. Then click <code>Separate</code> followed by <code>Convert</code> in the <code>U+hex</code> field and look in the <code>Characters</code> field for the result.</p>
+
+    <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and escapes. Only U+hex escapes are converted.</p>
+
+      
+    <h3 id="ZeroX">0x...</h3>
+      <p><strong> When conversion puts something here:</strong>&nbsp; By default, everything except ASCII characters is converted.</p>
+      <p>You can deselect the <code class="kw" translate="no">Show ascii</code> checkbox to specify that you want all characters to be converted.</p>
+      <p>If you want to insert spaces between adjacent escapes (only) click on the <code>Separate</code> button. Note, however, that if you now click on the <code>Convert</code> button for that field, the output will contain those extra spaces.</p>
+      <p class="warning"><strong>Hint:</strong> to separate a sequence of characters by spaces, paste the characters into the field with a green background and click <code>Convert</code>. Then click <code>Separate</code> followed by <code>Convert</code> in the <code>0x...</code> field and look in the <code>Characters</code> field for the result.</p>
+      
+      <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and hexadecimal 0x... escapes. Only 0x...escapes are converted.</p>
+
+
+   
+      
+    <h3 id="utf8">UTF-8 code units</h3>
+      <p><strong> When conversion puts something here:</strong>&nbsp; You'll see pairs of 2-digit hexadecimal numbers representing the bytes that make up the text when encoded in UTF-8.</p>
+
+      <p><strong>If you start a conversion from here:</strong>&nbsp; It must be hexadecimal byte codes only, separated by spaces.</p>
+
+
+      
+    <h3 id="utf16">UTF-16 code units</h3>
+      <p><strong> When conversion puts something here:</strong>&nbsp; You'll see hexadecimal numbers of 1 to 4 digits representing the UTF-16 code units for the text converted. Supplementary characters are represented by two code units.</p>
+
+      <p><strong>If you start a conversion from here:</strong>&nbsp; It must be hexadecimal code units only, separated by spaces.</p>
+
+
+
+    <h3 id="hexCP">Hexadecimal code points</h3>
+      <p><strong> When conversion puts something here:</strong>&nbsp; By default, you'll see Hex numbers only, all separated by spaces.</p>
+      <p>If you use the checkbox <code class="kw" translate="no">Keep ascii</code> ASCII characters remain unchanged, and a space is inserted after any hex sequence followed by another hex sequence.</p>
+      <p>The <code class="kw" translate="no">Pad</code> selector allows you to indicate how much padding to apply to the hex numbers. This control applies changes when you select a different number, as well as when a conversion is triggered. If the Hex/UTF-32 box contains mixed hex values and ASCII characters see the warning just below.</p>
+      
+      <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and hex numbers. Only hex numbers are converted.</p>
+    	<p class="warning"><strong>Warning:</strong> It is not recommended to  click on the <code class="kw" translate="no">Convert</code> button for <code class="kw" translate="no">Hex/UTF-32</code> when that box contains mixed ASCII and hex numbers, unless you are sure that the box contents can be reliably parsed. One reason is that a sequence of two or more characters in the range a-f, such as <samp>cafe</samp>, will be treated as a hexadecimal number representing a character. Another reason is that if spaces are not inserted between a hex sequence and adjacent ASCII characters, this can cause problems if you try to convert, such as W3C202C being read as W+3C202C (which raises a code point out of range error). Furthermore, the extra spaces inserted when a conversion results in mixed text in this box are also carried through if you then click on the <code class="kw" translate="no">Convert</code> button for this box.</p>
+
+      
+    <h3 id="decCP">Decimal code points</h3>
+      <p><strong> When conversion puts something here:</strong>&nbsp; By default, you'll see decimal numbers only, all separated by spaces.  </p>
+      <p>If you the <code class="kw" translate="no">Keep ascii</code> checkbox is checked, the result will be a mix of decimal code point numbers and ASCII text. A space is inserted before a code point value if it is immediately followed by another decimal code point value.</p>
+
+      <p><strong>If you start a conversion from here:</strong>&nbsp; It can be a mix of text and decimal numbers. Only decimal numbers are converted.</p>
+    	<p class="warning"><strong>Warning:</strong> It is not recommended to  click on the <code class="kw" translate="no">Convert</code> button for the <code class="kw" translate="no">Decimal</code> box when that box contains mixed ASCII and decimal numbers, unless you are sure that the box contents can be reliably parsed. One reason is that if spaces are not inserted between a hex sequence and adjacent digits, this can cause problems if you try to convert. Furthermore, the extra spaces inserted when a conversion results in mixed text in this box are also carried through if you then click on the <code class="kw" translate="no">Convert</code> button for this box.</p>
+</section>
+
+
+
+<section id="versionInfo">
+<h2>Notable changes in version 9</h2>
+      <p>There have been no issues raised against this version, so it appears to be stable. If you prefer the old version, you can still find it <a href="https://r12a.github.io/app-conversion/index8-2">here</a>.</p>
+<ul>
+<li>ES6 style is now the default format when converting to JavaScript. Deselect <code>ES6</code> checkbox to get Java-style escapes.</li>
+<li>When converting to <code>U-hex</code> and <code>0x...</code> the escapes are no longer surrounded by spaces (and therefore the conversion is reversible). If you want to separate adjacent escapes by a space, click on the <code>Separate</code> button (which will make the conversion no longer reversible).</li>
+<li>The <code>\u{1234 5678 90}</code> style is now recognised and handled when converting to characters.</li>
+<li>Added a Perl/UTR#18 box to handle <code>\x{...}</code> type escapes.</li>
+<li>Changing checkboxes produces an immediate effect for all grey boxes now.</li>
+<li>Buttons for choosing how to parse bare numbers in green box input changed from buttons to a pull-down control.</li>
+<li>Example text provided with instructions  tests for several more formats, and in a more useful way.</li>
+<li>The Hex/UTF-32 box allows you to set padding to different lengths, including 8 digit code points, which is useful for UTF-32.</li>
+<li>Bugfix: <a href="https://github.com/r12a/app-conversion/issues/3">Issue #3 Missing space separator between first two characters in some strings</a></li>
+<li>Removed choice to keep Latin1 characters. Only ASCII allowed.</li>
+<li>Improved  the Hex/UTF-32 and Decimal boxes, so that conversion of text with or without ASCII characters  works better. Note that, when <code class="kw" translate="no">Keep ASCII</code> is on the conversion is no longer reversible, and may contain character sequences that fail to convert unless broken up by spaces manually.</li>
+<li>Add an <code class="kw" translate="no">Extract</code> button to the green box that strips away everything but the escapes.</li>
+<li>Moved notes into a separate help file, and added links to it using <img src="images/help.png" alt="help icon"/>.</li>
+</ul>
+</section>
+
+
+
+
+
+<div class="smallprint"><span id="version">
+See <a href="https://github.com/r12a/app-conversion/commits/gh-pages">recent changes</a>.
+Make a <a href="https://github.com/r12a/app-conversion/issues/new">comment</a>. 
+Licence <a rel="license" href="http://creativecommons.org/licenses/by/4.0/">CC-By</a> © <a href="mailto:r12a@w3.org">r12a</a> 
+</span>
+</div>
+
+<script>
+	var escapedInput = document.getElementById('escapedInput');
+	var codePoints = document.getElementById('codePoints');
+	var decCodePoints = document.getElementById('decCodePoints');
+	var UTF8 = document.getElementById('UTF8');
+	var UTF16 = document.getElementById('UTF16');
+	var zeroX = document.getElementById('zeroX');
+	var hexNCRs = document.getElementById('hexNCRs');
+	var decNCRs = document.getElementById('decNCRs');
+	var Unicode = document.getElementById('Unicode');
+	var pEsc = document.getElementById('pEsc');
+	var rust = document.getElementById('rust');
+	var perl = document.getElementById('perl');
+	var jEsc = document.getElementById('jEsc');
+	var chars = document.getElementById('chars');
+	var CSS = document.getElementById('CSS');
+	var XML = document.getElementById('XML');
+
+// check for parameters and take appropriate action
+parameters = location.search.split('&')
+parameters[0] = parameters[0].substring(1)
+for (var p=0;p<parameters.length;p++) {  
+	pairs = parameters[p].split('=')
+	if (pairs[0] == 'q' && pairs[1]) { 
+		escapedInput.value = convertpEnc2Char(pairs[1])
+		displayResults(convertAllEscapes(escapedInput.value, "none"), escapedInput.id)
+		}
+	}
+
+	</script>
+</body>
+</html>
