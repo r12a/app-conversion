@@ -904,6 +904,142 @@ function convertCharStr2XML ( str, parameters ) {
 	str = str.replace(/>/g, '&gt;')
 	
 	// replace invisible and ambiguous characters
+    var nongraphic = new Set([
+		'\u00AD',  // shy
+
+        '\u061C',  // alm
+        '\u070F',  // sam
+        '\u08E2',  // end of ayah
+        '\u180E',  // mvs
+		'\u200B',  // zwsp
+ 		'\u200C',  // zwnj
+		'\u200D',  // zwj
+		'\u200E',  // lrm
+		'\u200F',  // rlm
+		'\u202A',  // lre
+		'\u202B',  // rle
+		'\u202D',  // lro
+		'\u202E',  // rlo
+		'\u202C',  // pdf
+ 		'\u2060',  // wjoiner
+		'\u2061',  // func appln
+ 		'\u2062',  // inv x
+		'\u2063',  // inv sep
+		'\u2064',  // inv +
+        '\u2066',  // lri
+		'\u2067',  // rli
+		'\u2068',  // fsi
+		'\u2069',  // pdi
+        '\u206A',  // iss
+		'\u206B',  // ass
+		'\u206C',  // iafs
+		'\u206D',  // aafs
+		'\u206E',  // nads
+		'\u206F',  // nods
+		'\uFFF9',  // iaa
+		'\uFFFA',  // ias
+		'\uFFFB',  // iat
+
+		'\u13430',  // vert join
+		'\u13431',  // horiz join
+		'\u13432',  // ins top start
+		'\u13433',  // ins bottom start
+		'\u13434',  // ins top end
+		'\u13435',  // ins bottom end
+		'\u13436',  // overlay mid
+		'\u13437',  // beg seg
+		'\u13438',  // end seg
+
+		'\u1BCA0',  // sh let overlap
+		'\u1BCA1',  // sh cont overlap
+		'\u1BCA2',  // sh format down
+		'\u1BCA3',  // sh format up
+
+		'\u1D173',  // mus beg beam
+		'\u1D174',  // mus end beam
+		'\u1D175',  // mus beg tie
+		'\u1D176',  // mus end tie
+		'\u1D177',  // mus beg slur
+		'\u1D178',  // mus end slur
+		'\u1D179',  // mus beg phrase
+		'\u1D17A',  // mus end phrase
+	
+		'\u2000',  // en quad
+		'\u2001',  // em quad
+		'\u2002',  // en space
+		'\u2003',  // em space
+		'\u2004',  // 3 per em space
+		'\u2005',  // 4 per em space
+		'\u2006',  // 6 per em space
+		'\u2007',  // figure space
+		'\u2008',  // punctuation space
+		'\u2009',  // thin space
+		'\u200A',  // hair space
+		'\u205F',  // mmsp
+		'\u00A0',  // nbsp
+		'\u3000',  // ideographic sp
+		'\u202F',  // nnbsp
+
+		'\u180B',  // mfvs1
+		'\u180C',  // mfvs2
+		'\u180D',  // mfvs3
+
+		'\u2028',  // line sep
+
+        '\u0000',  // null
+        ])
+
+	if (parameters.match(/convertinvisibles/)) {
+        newstring = ''
+        for (let i=0;i<str.length;i++) {
+            if (str.codePointAt(i)===0x09 || str.codePointAt(i)===0x0A || str.codePointAt(i)===0x0D) newstring += str[i]
+            else if (str.codePointAt(i)<32 || (str.codePointAt(i)>126 && str.codePointAt(i)<160) || str.codePointAt(i)>0xE0000) {
+                hex = str.codePointAt(i).toString(16).toUpperCase()
+                while (hex.length < 4) hex = '0'+hex
+                newstring += '&#x'+hex+';'
+                }
+            else if (nongraphic.has(str[i])) {
+                hex = str.codePointAt(i).toString(16).toUpperCase()
+                while (hex.length < 4) hex = '0'+hex
+                newstring += '&#x'+hex+';'
+                }
+            else newstring += str[i]
+            }
+        str = newstring
+        }
+
+	// convert lre/rle/pdf/rli/lri/fsi/pdi to markup
+	if (parameters.match(/bidimarkup/)) {
+		str = str.replace(/\u2066|&#x2066;/g, '&lt;span dir=&quot;ltr&quot;&gt;') // lri
+		str = str.replace(/\u2067|&#x2067;/g, '&lt;span dir=&quot;rtl&quot;&gt;') // rli
+		str = str.replace(/\u2068|&#x2068;/g, '&lt;span dir=&quot;auto&quot;&gt;') // fsi
+		str = str.replace(/\u2069|&#x2069;/g, '&lt;/span&gt;') // pdi
+		
+		str = str.replace(/\u202A|&#x202A;/g, '&lt;span dir=&quot;ltr&quot;&gt;') // lre
+		str = str.replace(/\u202B|&#x202B;/g, '&lt;span dir=&quot;rtl&quot;&gt;') // rle
+		str = str.replace(/\u202C|&#x202C;/g, '&lt;/span&gt;') // pdf
+        
+		//str = str.replace(/\u202D/g, '&lt;bdo dir=&quot;ltr&quot;&gt;')
+		//str = str.replace(/\u202E/g, '&lt;bdo dir=&quot;rtl&quot;&gt;')
+		}
+
+	return str;
+	}
+
+
+function convertCharStr2XMLOLD ( str, parameters ) {
+	// replaces xml/html syntax-sensitive characters in a string with entities
+	// also replaces invisible and ambiguous characters with escapes (list to be extended)
+	// str: string, the input string
+    // parameters: string, list of enum[convertinvisibles, bidimarkup]
+	// (convertinvisibles) invisible characters are converted to NCRs
+	// (bidimarkup) bidi rle/lre/pdf/rli/lri/fsi/pdi characters are converted to markup
+	str = str.replace(/&/g, '&amp;')
+	str = str.replace(/"/g, '&quot;')
+	str = str.replace(/</g, '&lt;')
+	str = str.replace(/>/g, '&gt;')
+	
+	// replace invisible and ambiguous characters
 	if (parameters.match(/convertinvisibles/)) {
 		str = str.replace(/\u2066/g, '&#x2066;')  // lri
 		str = str.replace(/\u2067/g, '&#x2067;')  // rli
@@ -931,7 +1067,7 @@ function convertCharStr2XML ( str, parameters ) {
 		str = str.replace(/\u200A/g, '&#x200A;') // hair space
 		str = str.replace(/\u200B/g, '&#x200B;') // zwsp
 		str = str.replace(/\u205F/g, '&#x205F;') // mmsp
-		str = str.replace(/\uA0/g, '&#xA0;') // nbsp
+		str = str.replace(/\u00A0/g, '&#x00A0;') // nbsp
 		str = str.replace(/\u3000/g, '&#x3000;') // ideographic sp
 		str = str.replace(/\u202F/g, '&#x202F;') // nnbsp
 
@@ -942,7 +1078,11 @@ function convertCharStr2XML ( str, parameters ) {
 		str = str.replace(/\u200C/g, '&#x200C;') // zwnj
 		str = str.replace(/\u200D/g, '&#x200D;') // zwj
 		str = str.replace(/\u2028/g, '&#x2028;') // line sep
-		str = str.replace(/\u206A/g, '&#x206A;') // iss
+		str = str.replace(/\u00AD/g, '&#x00AD;') // shy
+		str = str.replace(/\u2060/g, '&#x2060;') // wjoiner
+
+        str = str.replace(/\u0000/g, '&#x0000;') // null
+        str = str.replace(/\u206A/g, '&#x206A;') // iss
 		str = str.replace(/\u206B/g, '&#x206B;') // ass
 		str = str.replace(/\u206C/g, '&#x206C;') // iafs
 		str = str.replace(/\u206D/g, '&#x206D;') // aafs
