@@ -19,6 +19,10 @@ body.app #sitelinks { margin-bottom: 0; }
 #example p { margin-right:7.5%; font-size:90%; }
 textarea { padding: 0 5px; }
 #versionInfo a { font-weight: bold; }
+.subhead { color: brown; margin-left: .75em; }
+.copy { margin: 0 10px; padding: 0 .5em; font-size: .85em; background-color: darkgray; color: white; border: 0; }
+.copy:hover { color: brown; }
+.convert { margin: 0 10px; }
 </style>
 <!--
 	Copyright (C) 2007  Richard Ishida ishida@w3.org
@@ -37,7 +41,7 @@ textarea { padding: 0 5px; }
 <body class="app">
 <header>
 <div id="header-boilerplate"></div>
-<script>document.getElementById('header-boilerplate').innerHTML = bp_appHeader('../shared/images/world.gif','Unicode code converter','v9');</script>
+<script>document.getElementById('header-boilerplate').innerHTML = bp_appHeader('../shared/images/world.gif','Unicode code converter','v10');</script>
 </header>
 
 
@@ -63,7 +67,27 @@ textarea { padding: 0 5px; }
 				onclick="displayResults(convertAllEscapes(escapedInput.value, document.getElementById('numbers').value), escapedInput.id);
                 return false;" style="font-size:140%;" >Convert</button>
                 
-      <span style="padding-top: 20px;"><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('escapedInput').focus();document.getElementById('escapedInput').select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('escapedInput').focus();document.getElementById('escapedInput').select();" />
+       <button class="copy" onclick="
+	   		escapedInput.value = ''; 
+	   		codePoints.value = ''; 
+	   		decCodePoints.value = ''; 
+	   		UTF8.value = ''; 
+	   		UTF16.value = ''; 
+	   		zeroX.value = ''; 
+	   		hexNCRs.value = ''; 
+	   		decNCRs.value = ''; 
+	   		Unicode.value = ''; 
+	   		pEsc.value = ''; 
+	   		rust.value = ''; 
+	   		jEsc.value = ''; 
+	   		perl.value = ''; 
+	   		chars.value = ''; 
+	   		CSS.value = ''; 
+	   		XML.value = ''; 
+			
+			escapedInput.focus(); return false;" >Clear</button>
+
+
 
         <span class="options">
 <label>Treat bare numbers as 
@@ -84,15 +108,16 @@ textarea { padding: 0 5px; }
 
 <button id="extract" onClick="escapedInput.value = extractEscapes(document.getElementById('escapedInput').value)">Extract</button>
     &nbsp;&nbsp;&nbsp;<a href="help#use" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
-  <textarea id="escapedInput" name="escapedInput" rows="3" cols="5" style="background-color: #DFD; color:#333; height:7em;"></textarea></td>
+  <textarea id="escapedInput" name="escapedInput" rows="3" cols="5" style="background-color: #DFD; color:#333; height:7em;" placeholder="Add characters here, then press Convert."></textarea></td>
   </tr>
   
   
   
 <tr>
     <td colspan="2" style="padding-top: 20px;"><!--  *********** CHARACTERS *********** --> 
-       &#xA0;<span style="color:brown;">Characters</span> <button value="Convert" onclick="displayResults( chars.value, chars.id ); return false;" >Convert</button><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('chars').focus();document.getElementById('chars').select();document.execCommand('copy')" /><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('chars').focus();document.getElementById('chars').select();document.execCommand('copy')" />
-      
+      <span class="subhead">Characters</span>
+      <button class="copy" onclick="chars.focus(); chars.select(); document.execCommand('copy'); return false;" >Copy</button>
+	   
        
       <!--button  
 				onclick="if (chars.value== '') { alert('No characters in the text area.'); } else { var list = window.open('/rishida/tools/analysestring?list='+encodeURIComponent(chars.value)+'&amp;smallgraphics=on&amp;compact=on&amp;noblock=on&amp;nounicode=on&amp;nonotes=on', 'list'); list.focus(); }
@@ -101,9 +126,15 @@ textarea { padding: 0 5px; }
       <!--button  
 				onclick="var list = window.open( '/rishida/uniview/?codepoints='+convertChar2CP( chars.value ) );
                 return false;" >View in UniView</button-->
-      <button  
+
+		<button  
 				onclick="var list = window.open( '/uniview/?charlist='+encodeURIComponent(chars.value ));
-                return false;" >View in UniView</button> &nbsp;&nbsp;&nbsp;<a href="help#characters" target="_blank"><img src="images/help.png" alt="help"/></a>
+                return false;" >View in UniView</button> 
+
+		<button class="convert" 
+		  onclick="displayResults( chars.value, chars.id ); return false;" >Convert</button>
+		
+		&nbsp;&nbsp;&nbsp;<a href="help#characters" target="_blank"><img src="images/help.png" alt="help"/></a>
        <br/>
       <textarea id="chars" name="chars" rows="2" cols="5"></textarea></td>
 </tr>
@@ -111,15 +142,19 @@ textarea { padding: 0 5px; }
   
   <tr>
     <td colspan="2"><!--  *********** HTML/XML *********** --> 
-       &#xA0;<span style="color:brown;">HTML/XML</span><span style="padding-top: 20px;"> <button value="Convert" 
-				onclick="displayResults(convertXML2Char(XML.value), XML.id);
-                return false;" >Convert</button><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('XML').focus();document.getElementById('XML').select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('XML').focus();document.getElementById('XML').select();" />
+      <span class="subhead">HTML/XML</span>
+      <button class="copy" onclick="XML.focus(); XML.select(); document.execCommand('copy'); return false;" >Copy</button>
 
                 <span class="options" id="xmlOptions">
                 <label>Escape invisible characters<input class="check" type="checkbox" id="xmlinvisibles" data-fn="convertinvisibles" checked="checked" onclick="XML.value = convertCharStr2XML(convertXML2Char(XML.value), getParameters(parentNode.parentNode));" /></label>
               
                 <label>Convert bidi controls to HTML markup<input type="checkbox" id="xmlbidimarkup" data-fn="bidimarkup" onclick="XML.value = convertCharStr2XML(convertXML2Char(XML.value), getParameters(parentNode.parentNode));"/></label>
-              </span> &nbsp;&nbsp;&nbsp;<a href="help#html" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
+              </span> 
+		
+		<button class="convert" 
+	 	 onclick="displayResults( convertXML2Char(XML.value), XML.id ); return false;" >Convert</button>
+
+		&nbsp;&nbsp;&nbsp;<a href="help#html" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
               <textarea id="XML" name="XML" rows="2" cols="5"></textarea>
   </td>
 </tr>
@@ -127,35 +162,37 @@ textarea { padding: 0 5px; }
   
     <tr>
     <td><!--  *********** HEX NCRS *********** --> 
-       &#xA0;<span style="color:brown;">Hex NCRs</span> 
-      <button value="Convert" onclick="displayResults( convertHexNCR2Char(hexNCRs.value), hexNCRs.id ); 
-return false;" >Convert</button><span style="padding-top: 20px;"><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('hexNCRs').focus();document.getElementById('hexNCRs').select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('hexNCRs').focus();document.getElementById('hexNCRs').select();" />
+      <span class="subhead">Hex NCRs</span>
+      <button class="copy" onclick="hexNCRs.focus(); hexNCRs.select(); document.execCommand('copy'); return false;" >Copy</button>
 
 <span class="options" id="hexNCROptions"><label>Show ascii<input class="check" type="checkbox" id="hexncrascii" checked="checked" data-fn="ascii"
 onclick="hexNCRs.value = convertCharStr2SelectiveCPs(convertHexNCR2Char(hexNCRs.value), getParameters(parentNode), true, '&#x', ';', 'hex');" /></label></span>
-       &nbsp;&nbsp;&nbsp;<a href="help#hexNCRs" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
+ 	  <button class="convert" 
+	  onclick="displayResults( convertHexNCR2Char(hexNCRs.value), hexNCRs.id ); return false;" >Convert</button>
+      &nbsp;&nbsp;&nbsp;<a href="help#hexNCRs" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
       <textarea id="hexNCRs" name="hexNCRs" rows="3" cols="5"></textarea></td>
       
       
       
     <td><!--  *********** DEC NCRS *********** --> 
-       &#xA0;<span style="color:brown;">Decimal NCRs</span> <button value="Convert" 
-				onclick="displayResults( convertDecNCR2Char(decNCRs.value), decNCRs.id ); 
-                return false;" >Convert</button><span style="padding-top: 20px;"><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('decNCRs').focus();document.getElementById('decNCRs').select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('decNCRs').focus();document.getElementById('decNCRs').select();" />
+       <span class="subhead">Decimal NCRs</span>
+      <button class="copy" onclick="decNCRs.focus();decNCRs.select(); document.execCommand('copy'); return false;" >Copy</button>
 
 <span class="options" id="decNCROptions"><label>Show ascii<input type="checkbox" id="decncrascii" checked="checked" data-fn="ascii"
 onclick="decNCRs.value = convertCharStr2SelectiveCPs(convertDecNCR2Char(decNCRs.value), getParameters(parentNode), true, '&#', ';', 'dec');" /></label>
-    </span> &nbsp;&nbsp;&nbsp;<a href="help#decNCRs" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
+    </span> 
+	  <button class="convert" 
+	  onclick="displayResults( convertDecNCR2Char(decNCRs.value), decNCRs.id ); return false;" >Convert</button>
+	&nbsp;&nbsp;&nbsp;<a href="help#decNCRs" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
       <textarea id="decNCRs" name="decNCRs" rows="3" cols="5"></textarea></td>
   </tr>
   
   
   <tr>
     <td><!--  *********** JAVASCRIPT ESCAPES *********** --> 
-      &#xA0;<span style="color:brown;">JavaScript/Java/C</span>
-      <button value="Convert" 
-				onclick="displayResults(convertjEsc2Char(jEsc.value, true), jEsc.id); 
-                return false;" >Convert</button><span style="padding-top: 20px;"><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('jEsc').focus();document.getElementById('jEsc').select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('jEsc').focus();document.getElementById('jEsc').select();" />
+      <span class="subhead">JS/Java/C</span>
+      <button class="copy" onclick="jEsc.focus();jEsc.select(); document.execCommand('copy'); return false;" >Copy</button>
+
 
 <span class="options" id="jEscOptions">
       <label>ES6<input class="check" type="checkbox" checked data-fn="es6styleSC" id="es6styleSC" onclick="document.getElementById('cstyleSC').checked =false; jEsc.value = convertCharStr2jEsc(convertjEsc2Char(jEsc.value, true), getParameters(parentNode));"/></label>
@@ -166,42 +203,49 @@ onclick="decNCRs.value = convertCharStr2SelectiveCPs(convertDecNCR2Char(decNCRs.
       <!--button value="Switch" 
 				onclick="jEsc.value = convert2C( jEsc.value ); 
                 return false;" >C-style Supp. Chars.</button--> 
-       &nbsp;&nbsp;&nbsp;<a href="help#javascript" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
+ 
+ 	  <button class="convert" 
+	  onclick="displayResults(convertjEsc2Char(jEsc.value, true), jEsc.id); return false;" >Convert</button>
+
+	&nbsp;&nbsp;&nbsp;<a href="help#javascript" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
       <textarea id="jEsc" name="jEsc" rows="3" cols="5"></textarea></td>
       
       
     <td><!--  *********** RUST ESCAPES *********** --> 
-      &#xA0;<span style="color:brown;">Rust/Ruby</span>
-      <button value="Convert" 
-				onclick="displayResults(convertRust2Char(rust.value), rust.id); 
-                return false;" >Convert</button><span style="padding-top: 20px;"><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="rust.focus();rust.select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="rust.focus();rust.select();" />
+      <span class="subhead">Rust/Ruby</span>
+      <button class="copy" onclick="rust.focus();rust.select(); document.execCommand('copy'); return false;" >Copy</button>
 
-<span class="options" id="rustOptions">
+	<span class="options" id="rustOptions">
       <label>\n etc<input class="check" type="checkbox" data-fn="noCR" id="noRustCR"  onclick="rust.value = convertCharStr2Rust(convertRust2Char(rust.value, true), getParameters(parentNode));"/></label>
     </span>
-       &nbsp;&nbsp;&nbsp;<a href="help#rust" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
+
+	  <button class="convert" 
+	  onclick="displayResults(convertRust2Char(rust.value), rust.id); return false;" >Convert</button>
+
+		&nbsp;&nbsp;&nbsp;<a href="help#rust" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
       <textarea id="rust" name="rust" rows="3" cols="5"></textarea></td>
 </tr>
 
 <tr>
     <td><!--  *********** CSS ESCAPES *********** --> 
-      &#xA0;<span style="color:brown;">CSS</span> <button value="Convert" 
-				onclick="displayResults(convertCSS2Char(CSS.value, true), CSS.id); 
-                return false;" >Convert</button><span style="padding-top: 20px;"><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('CSS').focus();document.getElementById('CSS').select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('CSS').focus();document.getElementById('CSS').select();" />
+      <span class="subhead">CSS</span>
+      <button class="copy" onclick="CSS.focus(); CSS.select(); document.execCommand('copy'); return false;" >Copy</button>
+	  <button class="convert" 
+	  onclick="displayResults(convertCSS2Char(CSS.value, true), CSS.id); return false;" >Convert</button>
       
        &nbsp;&nbsp;&nbsp;<a href="help#css" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
       <textarea id="CSS" name="CSS" rows="3" cols="5"></textarea></td>
 
 
     <td><!--  *********** \X NOTATION *********** --> 
-      &#xA0;<span style="color:brown;">Perl/UTR#18</span>
-    <button value="Convert" 
-				onclick="displayResults(convertPerl2Char(perl.value), perl.id); 
-                return false;" >Convert</button><span style="padding-top: 20px;"><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="perl.focus();perl.select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="perl.focus();perl.select();" />
-
+      <span class="subhead">Perl/UTR#18</span>
+      <button class="copy" onclick="perl.focus(); perl.select(); document.execCommand('copy'); return false;" >Copy</button>
+      
     <span class="options" id="perlOptions">
       <label>\n etc<input class="check" type="checkbox" data-fn="noCR" id="noperlCR"  onclick="perl.value = convertCharStr2Perl(convertPerl2Char(perl.value, true), getParameters(parentNode));"/></label>
     </span>
+	  <button class="convert" 
+	  onclick="displayResults(convertPerl2Char(perl.value), perl.id); return false;" >Convert</button>
     &nbsp;&nbsp;&nbsp;<a href="help#perl" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
 <textarea id="perl" name="perl" rows="3" cols="5"></textarea></td>
 </tr>
@@ -210,9 +254,10 @@ onclick="decNCRs.value = convertCharStr2SelectiveCPs(convertDecNCR2Char(decNCRs.
 
   <tr>
     <td colspan="2"><!--  *********** % ESCAPES *********** --> 
-       &#xA0;<span style="color:brown;">Percent encoding for URIs</span> <button value="Convert" 
-				onclick="displayResults( convertpEnc2Char(pEsc.value), pEsc.id ); 
-                return false;" >Convert</button><span style="padding-top: 20px;"><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('pEsc').focus();document.getElementById('pEsc').select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('pEsc').focus();document.getElementById('pEsc').select();" />
+      <span class="subhead">Percent encoding for URIs</span>
+      <button class="copy" onclick="pEsc.focus(); pEsc.select(); document.execCommand('copy'); return false;" >Copy</button>
+	  <button class="convert" 
+	  onclick="displayResults( convertpEnc2Char(pEsc.value), pEsc.id ); return false;" >Convert</button>
       
       &nbsp;&nbsp;&nbsp;<a href="help#percentEncoding" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
       <textarea id="pEsc" name="pEsc" rows="2" cols="5"></textarea></td>
@@ -220,10 +265,9 @@ onclick="decNCRs.value = convertCharStr2SelectiveCPs(convertDecNCR2Char(decNCRs.
   
   <tr>
     <td><!--  *********** U+ *********** --> 
-       &#xA0;<span style="color:brown;">U+hex</span> <button value="Convert" 
-				onclick="displayResults( convertUnicode2Char(Unicode.value), Unicode.id ); 
-                return false;" >Convert</button><span style="padding-top: 20px;"><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('Unicode').focus();document.getElementById('Unicode').select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('Unicode').focus();document.getElementById('Unicode').select();" />
-
+      <span class="subhead">U+hex</span>
+      <button class="copy" onclick="Unicode.focus(); Unicode.select(); document.execCommand('copy'); return false;" >Copy</button>
+      
         <span class="options"><label>Show ascii<input class="check" type="checkbox" id="unicodeascii" checked="checked" 
                 onclick="preserve = 'none';
 		        if (this.checked) { preserve = 'ascii'; } 
@@ -231,16 +275,18 @@ onclick="decNCRs.value = convertCharStr2SelectiveCPs(convertDecNCR2Char(decNCRs.
     </span>
                 <button onClick="Unicode.value=Unicode.value.replace(/([a-fA-F0-9])U\+/g,'$1 U+')">Separate</button>
 
-      &nbsp;&nbsp;&nbsp;<a href="help#UHex" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
+	  <button class="convert" 
+	  onclick="displayResults( convertUnicode2Char(Unicode.value), Unicode.id ); return false;" >Convert</button>
+
+	&nbsp;&nbsp;&nbsp;<a href="help#UHex" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
       <textarea id="Unicode" name="Unicode" rows="3" cols="5"></textarea></td>
       
       
       
     <td><!--  *********** 0x... *********** --> 
-       &#xA0;<span style="color:brown;">0x... </span> <button value="Convert" 
-				onclick="displayResults( convert0x2Char(zeroX.value), zeroX.id ); 
-                return false;" >Convert</button><span style="padding-top: 20px;"><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('zeroX').focus();document.getElementById('zeroX').select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('zeroX').focus();document.getElementById('zeroX').select();" />
-
+      <span class="subhead">0x...</span>
+      <button class="copy" onclick="zeroX.focus(); zeroX.select(); document.execCommand('copy'); return false;" >Copy</button>
+      
         <span class="options"><label>Show ascii<input class="check" type="checkbox" id="zeroXascii" checked="checked" 
                 onclick="preserve = 'none';
 		        if (this.checked) { preserve = 'ascii'; } 
@@ -249,25 +295,31 @@ onclick="decNCRs.value = convertCharStr2SelectiveCPs(convertDecNCR2Char(decNCRs.
     </span>
                 <button onClick="zeroX.value=zeroX.value.replace(/([a-fA-F0-9])0x/g,'$1 0x')">Separate</button>
 
-      &nbsp;&nbsp;&nbsp;<a href="help#ZeroX" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
+	  <button class="convert" 
+	  onclick="displayResults( convert0x2Char(zeroX.value), zeroX.id ); return false;" >Convert</button>
+
+	&nbsp;&nbsp;&nbsp;<a href="help#ZeroX" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
       <textarea id="zeroX" name="zeroX" rows="3" cols="5"></textarea></td>
   </tr>
   <tr>
   
   
     <td><!--  *********** UTF-8 *********** --> 
-      &#xA0;<span style="color:brown;">UTF-8 code units</span> <button value="Convert" 
-				onclick="displayResults(convertUTF82Char(UTF8.value), UTF8.id); 
-                return false;" >Convert</button><span style="padding-top: 20px;"><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('UTF8').focus();document.getElementById('UTF8').select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('UTF8').focus();document.getElementById('UTF8').select();" />
+      <span class="subhead">UTF-8 code units</span>
+      <button class="copy" onclick="UTF8.focus(); UTF8.select(); document.execCommand('copy'); return false;" >Copy</button>
+	  <button class="convert" 
+	  onclick="displayResults(convertUTF82Char(UTF8.value), UTF8.id); return false;" >Convert</button>
       
       &nbsp;&nbsp;&nbsp;<a href="help#utf8" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
       <textarea id="UTF8" name="UTF8" rows="3" cols="5"></textarea></td>
       
       
     <td><!--  *********** UTF-16 *********** --> 
-      &#xA0;<span style="color:brown;">UTF-16 code units</span> <button value="Convert" 
- 				onclick="displayResults(convertUTF162Char(UTF16.value), UTF16.id); 
-                return false;" >Convert</button><span style="padding-top: 20px;"><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('UTF16').focus();document.getElementById('UTF16').select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('UTF16').focus();document.getElementById('UTF16').select();" />
+      <span class="subhead">UTF-16 code units</span>
+      <button class="copy" onclick="UTF16.focus(); UTF16.select(); document.execCommand('copy'); return false;" >Copy</button>
+	  <button class="convert" 
+	  onclick="displayResults(convertUTF162Char(UTF16.value), UTF16.id); return false;" >Convert</button>
+      
      &nbsp;&nbsp;&nbsp;<a href="help#utf16" target="_blank"><img src="images/help.png" alt="help"/></a> <br/>
   <textarea id="UTF16" name="UTF16" rows="3" cols="5"></textarea></td>
   </tr>
@@ -275,11 +327,8 @@ onclick="decNCRs.value = convertCharStr2SelectiveCPs(convertDecNCR2Char(decNCRs.
 
   <tr>
     <td><!--  *********** CODE POINTS *********** --> 
-      &#xA0;<span style="color:brown;">Hex/UTF-32 </span> <button value="Convert" 
-				onclick="if (document.getElementById('hexcpascii').checked) {
-                displayResults( convertNumbers2Char(codePoints.value, 'hex'), codePoints.id ); }
-                else { displayResults( convertSpaceSeparatedNumbers2Char(codePoints.value, 'hex'), codePoints.id )}
-                return false;" >Convert</button><span style="padding-top: 20px;"><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('codePoints').focus();document.getElementById('codePoints').select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('codePoints').focus();document.getElementById('codePoints').select();" />
+      <span class="subhead">Hex/UTF-32</span>
+      <button class="copy" onclick="codePoints.focus(); codePoints.select(); document.execCommand('copy'); return false;" >Copy</button>
 
     <span class="options" id="hexCPOptions">
       <label>Keep ascii
@@ -297,23 +346,34 @@ onclick="decNCRs.value = convertCharStr2SelectiveCPs(convertDecNCR2Char(decNCRs.
       <option value="8">8</option>
       </select></label>
     </span>
-    &nbsp;&nbsp;&nbsp;<a href="help#hexCP" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
+
+	  <button class="convert" 
+	  onclick="if (document.getElementById('hexcpascii').checked) {
+                displayResults( convertNumbers2Char(codePoints.value, 'hex'), codePoints.id ); }
+                else { displayResults( convertSpaceSeparatedNumbers2Char(codePoints.value, 'hex'), codePoints.id )}
+                return false;" >Convert</button>
+
+		&nbsp;&nbsp;&nbsp;<a href="help#hexCP" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
       <textarea id="codePoints" name="codePoints" rows="3" cols="5"></textarea></td>
 
 
     <td><!--  *********** DEC CODE POINTS *********** --> 
-      &#xA0;<span style="color:brown;">Decimal </span> <button value="Convert" 
-				onclick="if (document.getElementById('deccpascii').checked) {
-                displayResults( convertNumbers2Char(decCodePoints.value, 'dec'), decCodePoints.id ); }
-                else { displayResults( convertSpaceSeparatedNumbers2Char(decCodePoints.value, 'dec'), decCodePoints.id ) }
-                return false;" >Convert</button><span style="padding-top: 20px;"><img src="copy.png" alt="Copy" title="Copy to clipboard" class="icon" onclick="document.getElementById('decCodePoints').focus();document.getElementById('decCodePoints').select();document.execCommand('copy')" /></span><img src="selectall.png" alt="Select" title="Select all text in the box" class="icon" onclick="document.getElementById('decCodePoints').focus();document.getElementById('decCodePoints').select();" />
-
+      <span class="subhead">Decimal</span>
+      <button class="copy" onclick="decCodePoints.focus(); decCodePoints.select(); document.execCommand('copy'); return false;" >Copy</button>
+      
 <span class="options">
       <label>Keep ascii
 <input class="check" type="checkbox" id="deccpascii"  /></label>
 
     </span>
-    &nbsp;&nbsp;&nbsp;<a href="help#decCP" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
+
+	  <button class="convert" 
+	  onclick="if (document.getElementById('deccpascii').checked) {
+                displayResults( convertNumbers2Char(decCodePoints.value, 'dec'), decCodePoints.id ); }
+                else { displayResults( convertSpaceSeparatedNumbers2Char(decCodePoints.value, 'dec'), decCodePoints.id ) }
+                return false;" >Convert</button>
+
+	&nbsp;&nbsp;&nbsp;<a href="help#decCP" target="_blank"><img src="images/help.png" alt="help"/></a><br/>
       <textarea id="decCodePoints" name="decCodePoints" rows="3" cols="5"></textarea></td>
   </tr>
 </table>
